@@ -24,8 +24,46 @@
 
 **Success criteria**:
 
-* Model performance: 75% cross-validated classification accuracy on the pre-trained data *
-* Business metrics: 30% users enter more than 1 pair of players, 10% recurrent users in a month *
+* Model performance: 75% cross-validated classification accuracy on the pre-trained data
+* Business metrics: 30% users enter more than 1 pair of players, 10% recurrent users in a month
+
+
+## Backlog and planning
+** Theme **
+Help tennis enthusiasts, gamers, and column writers to discover possible directions of a tennis game with AI-powered predictions. Users can use parameters to simulate upcoming tennis matches or fantasize a hypothetical match-up between players in different eras who never played together.
+
+** Epics **
+* 1. Exploratory data analysis and data cleansing
+- Backlog stories
+- a) Data overview and descriptive statistics (1 point, planned)
+- b) Initial data cleaning with outliers, missing values, and other attributes (1 point, planned)
+- c) Dataset transformation to make it a standard format for predictive modelling (2 points, planned) 
+
+* 2. Model building and validation
+- Backlog stories
+- a) Engineer feature set as predictor variables (4 points, planned)
+- b) Split data into training and validation sets (0 point)
+- c) Build an initial benchmark model for reference (1 point)
+- d) Iteratively develop a set of models with engineered features, optimize parameters to find the best model (4 points)
+- e) Validate the model using primary and alternative metrics (1 point)
+
+* 3. Product development
+- Backlog stories
+- a) Build data pipeline for the project (2 points??)
+- b) Build user iterface prototyupe for the project (4 points??)
+- c) Realize all functionality and improve user interface (8 points??)
+
+* 4. Product tests, refinement, and roll-out
+- Backlog stories
+- a) Perform tests on the use cases (4 points??)
+- b) Optimize product before roll-out (4 points??)
+- c) Final shipment of the product beta (2 points)
+
+** Icebox **
+- a) Include additional functionalities such as a short summary paragraph and additional statistics with the prediction
+- b) Display of important preditor variables that is associated with the prediction
+- c) Develop a more interactive and image-loaded user-interface for guidance
+- d) Display upcoming matches according to the ATP World Tour schedule
 
 ## Repo structure 
 
@@ -85,82 +123,3 @@ This project structure was partially influenced by the [Cookiecutter Data Scienc
 * Open up `docs/build/html/index.html` to see Sphinx documentation docs. 
 * See `docs/README.md` for keeping docs up to date with additions to the repository.
 
-## Running the application 
-### 1. Set up environment 
-
-The `requirements.txt` file contains the packages required to run the model code. An environment can be set up in two ways. See bottom of README for exploratory data analysis environment setup. 
-
-#### With `virtualenv`
-
-```bash
-pip install virtualenv
-
-virtualenv pennylane
-
-source pennylane/bin/activate
-
-pip install -r requirements.txt
-
-```
-#### With `conda`
-
-```bash
-conda create -n pennylane python=3.7
-conda activate pennylane
-pip install -r requirements.txt
-
-```
-
-### 2. Configure Flask app 
-
-`config.py` holds the configurations for the Flask app. It includes the following configurations:
-
-```python
-DEBUG = True  # Keep True for debugging, change to False when moving to production 
-LOGGING_CONFIG = "config/logging/local.conf"  # Path to file that configures Python logger
-PORT = 3002  # What port to expose app on 
-SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/tracks.db'  # URI for database that contains tracks
-
-```
-
-The configuration currently says to save the database to a temporary location as it is just for testing. However, if you are not on your local machine, you may have issues with this location and should change it to a location within your home directory, where you have full permissions. To change it to saving in the data directory within this repository, run the Python code from this directory and change the `config.py` to say:
-
-```python
-SQLALCHEMY_DATABASE_URI = 'sqlite:///../data/tracksB.db'
-```
-
-The three `///` denote that it is a relative path to where the code is being run (which is from `src/add_songs.py`). 
-
-You can also define the absolute path with four `////`:
-
-```python
-SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/chloemawer/repos/MSIA423-example-project-repo-2019/data/tracks.db'
-```
-
-### 3. Initialize the database 
-
-To create the database in the location configured in `config.py` with one initial song, run: 
-
-`python run.py create --artist=<ARTIST> --title=<TITLE> --album=<ALBUM>`
-
-To add additional songs:
-
-`python run.py ingest --artist=<ARTIST> --title=<TITLE> --album=<ALBUM>`
-
-
-### 4. Run the application 
- 
- ```bash
- python app.py 
- ```
-
-### 5. Interact with the application 
-
-Go to [http://127.0.0.1:3000/]( http://127.0.0.1:3000/) to interact with the current version of hte app. 
-
-## Testing 
-
-Run `pytest` from the command line in the main project repository. 
-
-
-Tests exist in `test/test_helpers.py`

@@ -1,4 +1,4 @@
-# Example project repository
+# Project repository
 
 <!-- toc -->
 
@@ -22,18 +22,21 @@
 
 
 ## Backlog
+
 **Theme**
+
 Help tennis enthusiasts, gamers, and column writers to discover possible directions of a tennis game with AI-powered predictions. Users can use parameters to simulate upcoming tennis matches or fantasize a hypothetical match-up between players in different eras who never played together.
 
 **Epics**
+
 * 1. Exploratory data analysis and data cleansing
-[Backlog stories]
+* Backlog stories
 - a) Data overview and descriptive statistics (1 point, planned)
 - b) Initial data cleaning with outliers, missing values, and other attributes (1 point, planned)
 - c) Dataset transformation to make it a standard format for predictive modelling (2 points, planned) 
 
 * 2. Model building and validation
-[Backlog stories]
+* Backlog stories
 - a) Engineer feature set as predictor variables (4 points, planned)
 - b) Split data into training and validation sets (0 point)
 - c) Build an initial benchmark model for reference (1 point)
@@ -41,13 +44,13 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 - e) Validate the model using primary and alternative metrics (1 point)
 
 * 3. Product development
-[Backlog stories]
+* Backlog stories
 - a) Build data pipeline for the project (2 points??)
 - b) Build user iterface prototyupe for the project (4 points??)
 - c) Realize all functionality and improve user interface (8 points??)
 
 * 4. Product tests, refinement, and roll-out
-[Backlog stories]
+* Backlog stories
 - a) Perform tests on the use cases (4 points??)
 - b) Optimize product before roll-out (4 points??)
 - c) Final shipment of the product beta (2 points)

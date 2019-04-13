@@ -17,7 +17,7 @@
 
 **Success criteria**:
 
-* Model performance: 75% cross-validated classification accuracy on the pre-trained data
+* Model performance: 75% cross-validated classification accuracy on the training data
 * Business metrics: 30% users enter more than 1 pair of players, 10% recurrent users in a month
 
 
@@ -32,7 +32,7 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 * 1. Exploratory data analysis and data cleansing
 * Backlog stories
 - a) Data overview and descriptive statistics (1 point, planned)
-- b) Initial data cleaning with outliers, missing values, and other attributes (1 point, planned)
+- b) Initial data cleaning with outliers, missing values, skewness, and imbalance (1 point, planned)
 - c) Dataset transformation to make it a standard format for predictive modelling (2 points, planned) 
 
 * 2. Model building and validation
@@ -40,13 +40,13 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 - a) Engineer feature set as predictor variables (4 points, planned)
 - b) Split data into training and validation sets (0 point)
 - c) Build an initial benchmark model for reference (1 point)
-- d) Iteratively develop a set of models with engineered features, optimize parameters to find the best model (4 points)
-- e) Validate the model using primary and alternative metrics (1 point)
+- d) Iteratively develop a set of models with engineered features, optimize parameters to find the best model (8 points)
+- e) Validate the model using primary and potential alternative metrics such as F1-score (1 point)
 
 * 3. Product development
 * Backlog stories
 - a) Build data pipeline for the project (2 points??)
-- b) Build user iterface prototyupe for the project (4 points??)
+- b) Build user iterface prototype for the project (4 points??)
 - c) Realize all functionality and improve user interface (8 points??)
 
 * 4. Product tests, refinement, and roll-out
@@ -56,8 +56,13 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 - c) Final shipment of the product beta (2 points)
 
 **Icebox**
+* epic
+- Initialize database in RDS
+- Deploy model with Flask
+
+* stories
 - a) Include additional functionalities such as a short summary paragraph and additional statistics with the prediction
-- b) Display of important preditor variables that is associated with the prediction
+- b) Display of important predictor variables that is associated with the prediction
 - c) Develop a more interactive and image-loaded user-interface for guidance
 - d) Display upcoming matches according to the ATP World Tour schedule
 

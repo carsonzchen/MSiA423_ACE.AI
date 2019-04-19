@@ -1,5 +1,9 @@
 # ACE.AI - project repository
 
+**Developer: Carson Chen**
+
+**QA: Shreyas Sabnis**
+
 <!-- toc -->
 
 - [Project Charter](#project-charter)

@@ -15,15 +15,19 @@
 
 ## Project Charter 
 
-**Vision**: To make reasonable, reliable, and fun predictions for any real or hypothetical match-ups between two ATP players
+**Vision**: To make reasonable, reliable, and fun predictions for any real or hypothetical match-ups between two ATP (Association of Tennis Professionals) players
 
-**Mission**: Enable users to select two ATP players for the singles match-up, and to input additional optional match parameters such as surface, type and stage of tournament etc., and get a prediction of how the match will go. The prediction is based on a supervised machine learning model built and validated upon historical matches.
+**Mission**: Enable users to select two ATP players for the singles match-up, and to input additional optional match parameters such as surface, type and stage of tournament etc., and get a prediction of how the tennis match will go - who wins, in how many sets, and the associated probabilities. The prediction is based on a supervised machine learning model built and validated upon historical matches.
 
 **Success criteria**:
 
 * Model performance: 75% cross-validated classification accuracy on the training data
 * Business metrics: 30% users enter more than 1 pair of players, 10% recurrent users in a month
 
+**Data source**:
+All ATP matches between 2000 and March 2018, compiled by Edouard Thomas on Kaggle.com
+
+https://www.kaggle.com/edouardthomas/atp-matches-dataset
 
 ## Backlog
 

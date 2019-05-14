@@ -6,6 +6,7 @@ import logging.config
 from sqlalchemy import create_engine, Column, Integer, String, Text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+import sqlalchemy as sql
 
 from helpers import create_connection, get_session
 import argparse

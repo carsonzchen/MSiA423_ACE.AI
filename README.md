@@ -1,10 +1,24 @@
-﻿// update for midproject branch
 # ACE.AI - project repository
 
 **Developer: Carson Chen**
 
 **QA: Shreyas Sabnis**
 
+## Midproject PR update and instructions
+**1. Script that acquires data from data source and puts it into S3**
+* Run 'src/upload_data.py', provide your own bucket name, in the main path. Raw data will save as 's3://<your_bucket_name>/data/atp_data.csv'.
+
+###### python src/upload_data.py --bucket <your_bucket_name>
+
+**2. Script that creates prediction database schema in RDS**
+* Run 'src/create_db_rds.py'
+
+###### python src/create_db_rds.py
+
+**3. Review deck 'Midterm Review Deck.pptx' is in folder '/deliverables'**
+
+
+## Project Directory
 <!-- toc -->
 
 - [Project Charter](#project-charter)

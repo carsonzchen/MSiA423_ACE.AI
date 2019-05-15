@@ -36,7 +36,7 @@
 
 **Success criteria**:
 
-* Model performance: 75% cross-validated classification accuracy on the training data
+* Model performance: 75% cross-validated classification accuracy on the training data (Current: 65%)
 * Business metrics: 30% users enter more than 1 pair of players, 10% recurrent users in a month
 
 **Data source**:
@@ -54,33 +54,33 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 
 * 1. Exploratory data analysis and data cleansing
 * Backlog stories
-- a) Data overview and descriptive statistics (1 point, planned)
-- b) Initial data cleaning with outliers, missing values, skewness, and imbalance (1 point, planned)
-- c) Dataset transformation to make it a standard format for predictive modelling (2 points, planned) 
+- a) Data overview and descriptive statistics (1 point)
+- b) Initial data cleaning with outliers, missing values, skewness, and imbalance (1 point)
+- c) Dataset transformation to make it a standard format for predictive modelling (2 points) 
 
 * 2. Model building and validation
 * Backlog stories
-- a) Engineer feature set as predictor variables (4 points, planned)
+- a) Engineer feature set as predictor variables (4 points, ongoing)
 - b) Split data into training and validation sets (0 point)
 - c) Build an initial benchmark model for reference (1 point)
-- d) Iteratively develop a set of models with engineered features, optimize parameters to find the best model (8 points)
-- e) Validate the model using primary and potential alternative metrics such as F1-score (1 point)
+- d) Iteratively develop a set of models with engineered features, optimize parameters to find the best model (8 points, planned)
+- e) Validate the model using primary and potential alternative metrics such as F1-score (1 point, planned)
 
 * 3. Product development
 * Backlog stories
-- a) Build data pipeline for the project (2 points??)
-- b) Build user iterface prototype for the project (4 points??)
-- c) Realize all functionality and improve user interface (8 points??)
+- a) Build data pipeline for the project (2 points)
+- b) Build user iterface prototype for the project (4 points)
+- c) Realize all functionality and improve user interface (8 points)
+- d) Initialize database in RDS (1 point)
 
 * 4. Product tests, refinement, and roll-out
 * Backlog stories
-- a) Perform tests on the use cases (4 points??)
-- b) Optimize product before roll-out (4 points??)
+- a) Perform tests on the use cases (4 points)
+- b) Optimize product before roll-out (4 points)
 - c) Final shipment of the product beta (2 points)
 
 **Icebox**
 * epic
-- Initialize database in RDS
 - Deploy model with Flask
 
 * stories

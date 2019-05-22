@@ -19,10 +19,6 @@ DATABASE_PATH = path.join(PROJECT_HOME, 'data/acePredictor.db')
 SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(DATABASE_PATH)
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_ECHO = False  # If true, SQL for queries made will be printed
-
-# API configs
-HOST = "127.0.0.1"
-#HOST = "localhost"
-PORT = 10000
-#API_SENTIMENT_PATH='sentiment'
-#API_ENDPOINT="http://{}:{}/{}".format(HOST, PORT, API_SENTIMENT_PATH)
+DATABASE_NAME = 'msia423'
+RDS_HOST = 'mysql-nw-carsonchen.cvtyax3otjph.us-east-2.rds.amazonaws.com'
+RDS_PORT = '3306'

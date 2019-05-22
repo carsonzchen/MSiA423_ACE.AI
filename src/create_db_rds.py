@@ -10,7 +10,7 @@ import sqlalchemy as sql
 
 from helpers import create_connection, get_session
 import argparse
-#import config
+import config
 
 #logging.config.fileConfig(config.LOGGING_CONFIG)
 logger = logging.getLogger('ace-models')
@@ -38,11 +38,14 @@ class Prediction(Base):
 conn_type = "mysql+pymysql"
 user = os.environ.get("MYSQL_USER")
 password = os.environ.get("MYSQL_PASSWORD")
-host = os.environ.get("MYSQL_HOST")
-port = os.environ.get("MYSQL_PORT")
-DATABASE_NAME = 'msia423'
+#host = os.environ.get("MYSQL_HOST")
+#port = os.environ.get("MYSQL_PORT")
+host = config.RDS_HOST
+port = config.RDS_PORT
+database_name = config.DATABASE_NAME
+
 engine_string = "{}://{}:{}@{}:{}/{}".\
-format(conn_type, user, password, host, port, DATABASE_NAME)
+format(conn_type, user, password, host, port, database_name)
 #print(engine_string)
 engine = sql.create_engine(engine_string)
 Base.metadata.create_all(engine)

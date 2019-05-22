@@ -5,11 +5,12 @@
 **QA: Shreyas Sabnis**
 
 ## Midproject PR update and instructions
-**0. Set up environment**
-The environment.yml file contains the packages required to run the model code. You need to use conda to setup the virtual environment. The default environment name is ace. You may replace it with another environment name of your choice.
 
-conda env create --name ace -f environment.yml
-conda activate ace
+**0. Set up environment**
+* The environment.yml file contains the packages required to run the model code. You need to use conda to setup the virtual environment. The default environment name is ace. You may replace it with another environment name of your choice.
+
+###### conda env create --name ace -f environment.yml
+###### conda activate ace
 
 **1. Script that acquires data from data source and puts it into S3**
 * Run 'src/upload_data.py', provide your own bucket name, in the main path. Raw data will save as 's3://<your_bucket_name>/data/atp_data.csv'.

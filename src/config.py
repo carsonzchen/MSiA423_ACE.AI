@@ -10,6 +10,10 @@ DEBUG = True
 # Logging
 LOGGING_CONFIG = path.join(PROJECT_HOME, 'config/logging/logging.conf')
 
+# Source data
+data_permanent_url = 'http://s3.us-east-2.amazonaws.com/nw-carsonchen-acedata/atp_data.csv'
+file_name = "atp_data.csv"
+
 # Database connection config
 DATABASE_PATH = path.join(PROJECT_HOME, 'data/acePredictor.db')
 SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(DATABASE_PATH)

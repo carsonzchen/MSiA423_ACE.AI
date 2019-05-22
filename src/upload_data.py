@@ -2,22 +2,48 @@ import boto3
 import requests
 import argparse
 import os
+import logging
 
+import config
+logger = logging.getLogger(__name__)
 cwd = os.getcwd()
 
-data_permanent_url = 'http://s3.us-east-2.amazonaws.com/nw-carsonchen-acedata/atp_data.csv'
-file_name = "atp_data.csv"
+## download file from external data source
+def download_data(sourceurl, filename):
+    """
+    Downloads raw data from source public bucket (defined in config) to the local current folder
+    
+    :param sourceurl (str): url of the public data
+    :param filename (str): name of the saved file
 
-## upload file to s3 project bucket 
+    :return: None
+    """
+    try:
+        r = requests.get(sourceurl)
+        logger.info("Download %s from bucket %s", filename, sourceurl)
+        open(filename, 'wb').write(r.content)
+    except requests.exceptions.RequestException:
+        logger.warning("Error: Unable to download file %s", filename)
+
+## upload file to s3 project bucket
 def upload_data(args):
+    """
+    Upload raw data downloaded  in the local current folder to a bucket of user input, erases local file
+    :param args (argparse): user-input s3 bucket name for uploading the file 
+
+    :return: None
+    """
     s3 = boto3.client('s3')
-    s3.upload_file(file_name, args.bucket, 'data/{}'.format(file_name))
+    try:
+        s3.upload_file(config.file_name, args.bucket, 'data/{}'.format(config.file_name))
+        logger.info("Uploaded %s to bucket %s", config.file_name, args.bucket)
+        os.remove(config.file_name) # Delete data temporarily saved
+    except boto3.exceptions.S3UploadFailedError:
+        logger.warning("Error: Upload unsuccessful")
 
 if __name__ == "__main__":
-    r = requests.get(data_permanent_url)
-    open(file_name, 'wb').write(r.content) # Temporarily save the data
-    parser = argparse.ArgumentParser(description='Data downloaded as ' + cwd + '\\' + file_name)
+    parser = argparse.ArgumentParser(description='Upload data to specific S3 bucket')
     parser.add_argument("--bucket", help="input s3 bucket name")
     args = parser.parse_args()
+    download_data(config.data_permanent_url, config.file_name)
     upload_data(args)
-    os.remove(file_name) # Delete data temporarily saved

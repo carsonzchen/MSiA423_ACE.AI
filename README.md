@@ -7,10 +7,17 @@
 ## Midproject PR update and instructions
 
 **0. Set up environment**
-* The environment.yml file contains the packages required to run the model code. You need to use conda to setup the virtual environment. The default environment name is ace. You may replace it with another environment name of your choice.
+
+a) The environment.yml file contains the packages required to run the model code. You need to use conda to setup the virtual environment. The default environment name is ace. You may replace it with another environment name of your choice.
 
 ###### conda env create --name ace -f environment.yml
 ###### conda activate ace
+
+b) AWS RDS configuration
+
+Update 'src/config' file to configure your RDS
+* RDS_HOST -> The endpoint of your RDS instance
+* RDS_PORT -> The port number associated with your RDS instance
 
 **1. Script that acquires data from data source and puts it into S3**
 * Run 'src/upload_data.py', provide your own bucket name, in the main path. Raw data will save as 's3://<your_bucket_name>/data/atp_data.csv'.

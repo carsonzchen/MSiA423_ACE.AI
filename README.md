@@ -15,7 +15,12 @@ a) The environment.yml file contains the packages required to run the model code
 
 b) AWS RDS configuration
 
-Update 'src/config' file to configure your RDS
+Update 'config/.mysqlconfig' to configure update environment variables MYSQL_USER and MYSQL_PASSWORD for your RDS instance, then from the main folder, add the above environments to your bash profile (linux) by running:
+
+###### echo '/config/.mysqlconfig' >> ~/.bashrc
+###### source ~/.bashrc
+
+Also, update 'src/config' file to configure your RDS
 * RDS_HOST -> The endpoint of your RDS instance
 * RDS_PORT -> The port number associated with your RDS instance
 

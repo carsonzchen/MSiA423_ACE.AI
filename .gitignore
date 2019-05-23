@@ -30,6 +30,7 @@ test/test/*
 
 # Distribution / packaging
 .Python
+unused/
 env/
 build/
 develop-eggs/
@@ -115,3 +116,4 @@ ENV/
 .DS_Store
 */.DS_Store
 */.idea
+*.pptx

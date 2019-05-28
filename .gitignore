@@ -25,6 +25,11 @@ test/test/*
 *.ipynb
 .ipynb_checkpoints/
 
+# vscode
+.vscode/
+vscode/
+src/.vscode/
+
 # C extensions
 *.so
 

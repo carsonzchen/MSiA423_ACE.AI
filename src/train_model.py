@@ -15,7 +15,7 @@ from xgboost import XGBClassifier
 import pickle
 
 def choose_features(df, features_to_use=None, target=None):
-    """Reduces the dataset to the features_to_use. Will keep the target if provided.
+    """Reduces the dataset to the features_to_use. Will keep the target (label) if provided.
 
     Args:
         df (:py:class:`pandas.DataFrame`): DataFrame containing the features
@@ -32,10 +32,13 @@ def choose_features(df, features_to_use=None, target=None):
         dropped_columns = []
         for column in df.columns:
             # Identifies if this column is in the features to use or if it is a dummy of one of the features to use
-            if column in features_to_use or column.split("_dummy_")[0] in features_to_use or column == target:
+            if column in features_to_use or column.split("_dummy_")[0] in features_to_use: #or column == target:
                 features.append(column)
             else:
                 dropped_columns.append(column)
+        
+        if target is not None:
+                features.append(target)
 
         if len(dropped_columns) > 0:
             logger.info("The following columns were not used as features: %s", ",".join(dropped_columns))
@@ -48,45 +51,53 @@ def choose_features(df, features_to_use=None, target=None):
     return X
 
 def split_train_test(df, label, test_size = 0.25, random_state = 42):
-    """???
+    """
+    Split dataframe into 4 parts - training features and labels, and test features and labels
 
     Args:
-        df (:py:class:`pandas.DataFrame`): DataFrame containing the features
-        label 
-        test_size (:obj:`list`): List of columnms to extract from the dataset to be features
-        random_state (str, optional): If given, will include the target column in the output dataset as well.
+        df (:py:class:`pandas.DataFrame`): DataFrame containing the features and target
+        label (str): Column name of the label (target) for prediction
+        test_size (float, optional): percentage of the data to hold out as test set for evaluation
+        random_state (int, optional): a seed number for random number generator used for identifying test rows
 
     Returns:
-        X (:py:class:`pandas.DataFrame`): DataFrame containing extracted features (and target, it applicable)
+        X (`obj`: list): List of length 4 containing 4 numpy arrays, respectively at each position:
+        0 - train_features 
+        1 - test_features
+        2 - train_labels 
+        3 - test_labels
     """
     if label not in df.columns:
         logger.error("Label %s is not found in dataframe", label)
-        print('a')
     else:
         flist = list(df.columns)
         flist.remove(label)
         features_raw = df[flist]
+
         # One-hot encode features if categorical variables exit
         features_processed = pd.get_dummies(features_raw)
         features = np.array(features_processed)
         labels = np.array(df[label])
+
         # Split the data into training and testing sets
         train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size = test_size, random_state = random_state)
         return [train_features, test_features, train_labels, test_labels]
 
-def train_xgboost(train_features, train_labels, save_path = '../models/xgb_model.pkl', **kwargs):
-    """???
+def fit_xgboost(train_features, train_labels, save_path = '../models/xgb_model.pkl', **kwargs):
+    """
+    Fit the dataset using a xgboost model, with options to save the model as a pickle file. Use outputs
+    from split_train_test
 
     Args:
-        df (:py:class:`pandas.DataFrame`): DataFrame containing the features
-        label 
-        test_size (:obj:`list`): List of columnms to extract from the dataset to be features
-        random_state (str, optional): If given, will include the target column in the output dataset as well.
+        train_features: (:obj:`numpy array`) array of the training set features
+        train_labels: (:obj:`numpy array`) array of the training set label
+        save_path (str, optional): path to save the model as a pickle file
+        **kwargs: Tuning parameters to put into xgboost model, such as n_estimators, learning_rate, max_depth etc.
 
     Returns:
         X (:py:class:`pandas.DataFrame`): DataFrame containing extracted features (and target, it applicable)
     """
-    # ### Best result: tree: 150 alpha: 0.1 depth: 3
+    # Best result: tree: 150 alpha: 0.1 depth: 3
     xgbmodel = xgb.XGBClassifier(objective ='binary:logistic', n_estimators=150, \
         learning_rate = 0.1, max_depth = 3).fit(train_features, train_labels)
     if save_path is not None:
@@ -118,4 +129,4 @@ print('Training Labels Shape:', train_labels.shape)
 print('Testing Features Shape:', test_features.shape)
 print('Testing Labels Shape:', test_labels.shape)
 
-newmodel = train_xgboost(train_features, train_labels)
+newmodel = fit_xgboost(train_features, train_labels)

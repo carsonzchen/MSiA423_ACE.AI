@@ -8,12 +8,13 @@ logger = logging.getLogger(__name__)
 #import sqlalchemy
 #from sqlalchemy.orm import sessionmaker
 
-def read_raw(rawfilepath, filename):
+def read_raw(rawfilepath, filename, **kwargs):
     """
     Reads data from a csv file from a specified path
     
     :param rawfilepath (str): relative path of the target file
     :param filename (str): name of the file to load
+    :param **kwargs: read data types. Default: encoding = "ISO-8859-1", dtype=object
 
     :return: a pandas dataframe of the raw file
     """

@@ -3,22 +3,21 @@
 This module combines the argparsing of each module within src/ and enables the execution of the corresponding scripts
 so that all module imports can be absolute with respect to the main project directory.
 
-Current commands enabled:
-
-To create a database for Tracks with an initial song:
-
-    `python run.py create --artist="Britney Spears" --title="Radar" --album="Circus"`
-
-To add a song to an already created database:
-
-    `python run.py ingest --artist="Britney Spears" --title="Radar" --album="Circus"`
+To understand different arguments, run `python run.py --help`
 """
 import argparse
 import logging.config
-logging.config.fileConfig("config/logging/local.conf")
-logger = logging.getLogger("run-penny-lane")
+#from app.app import app
 
-from src.add_songs import create_db, add_track
+# Define LOGGING_CONFIG in config.py - path to config file for setting up the logger (e.g. config/logging/local.conf)
+#logging.config.fileConfig(app.config["LOGGING_CONFIG"])
+#logger = logging.getLogger("run-penny-lane")
+#logger.debug('Test log')
+
+from src.preprocess import run_trimdata, run_rankingstable, run_h2h_record, run_surface_record
+
+#def run_app(args):
+#    app.run(debug=app.config["DEBUG"], port=app.config["PORT"], host=app.config["HOST"])
 
 
 if __name__ == '__main__':
@@ -26,19 +25,21 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run components of the model source code")
     subparsers = parser.add_subparsers()
 
-    # Sub-parser for creating a database
-    sb_create = subparsers.add_parser("create", description="Create database")
-    sb_create.add_argument("--artist", default="Britney Spears", help="Artist of song to be added")
-    sb_create.add_argument("--title", default="Radar", help="Title of song to be added")
-    sb_create.add_argument("--album", default="Circus", help="Album of song being added.")
-    sb_create.set_defaults(func=create_db)
+    sb_trim = subparsers.add_parser("run_trimdata", description="Load data into a dataframe")
+    sb_trim.add_argument('--config', help='path to yaml file with configurations')
+    sb_trim.set_defaults(func=run_trimdata)
 
-    # Sub-parser for ingesting new data
-    sb_ingest = subparsers.add_parser("ingest", description="Add data to database")
-    sb_ingest.add_argument("--artist", default="Emancipator", help="Artist of song to be added")
-    sb_ingest.add_argument("--title", default="Minor Cause", help="Title of song to be added")
-    sb_ingest.add_argument("--album", default="Dusk to Dawn", help="Album of song being added")
-    sb_ingest.set_defaults(func=add_track)
+    sb_rankings = subparsers.add_parser("run_rankingstable", description="Load data into a dataframe")
+    sb_rankings.add_argument('--config', help='path to yaml file with configurations')
+    sb_rankings.set_defaults(func=run_rankingstable)
+
+    sb_h2h = subparsers.add_parser("run_h2h_record", description="Load data into a dataframe")
+    sb_h2h.add_argument('--config', help='path to yaml file with configurations')
+    sb_h2h.set_defaults(func=run_h2h_record)
+
+    sb_surface = subparsers.add_parser("run_surface_record", description="Load data into a dataframe")
+    sb_surface.add_argument('--config', help='path to yaml file with configurations')
+    sb_surface.set_defaults(func=run_surface_record)
 
     args = parser.parse_args()
     args.func(args)

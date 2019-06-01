@@ -1,0 +1,56 @@
+run_trimdata:
+  read_raw:
+    filename: 'atp_data.csv'
+    rawfilepath: 'data'
+  trim_columns: 
+    columnlist: ['Winner', 'Loser']
+  save_dataset:
+    rawfilepath: 'data'
+    filename: 'cleaned_atp.csv'
+
+run_rankingstable:
+  read_raw:
+    rawfilepath: 'data'
+    filename: 'cleaned_atp.csv'
+  save_dataset:
+    rawfilepath: 'data'
+    filename: 'static_rankings.csv'
+
+run_h2h_record:
+  read_raw:
+    rawfilepath: 'data'
+    filename: 'cleaned_atp.csv'
+  save_dataset:
+    rawfilepath: 'data'
+    filename: 'atp_h2h.csv'
+
+run_surface_record:
+  read_raw:
+    rawfilepath: 'data'
+    filename: 'cleaned_atp.csv'
+  save_dataset:
+    rawfilepath: 'data'
+    filename: 'atp_winpct_surface.csv'
+
+# load_data:
+#   datafolderpath: '..\\data'
+#   rawfilename: 'atp_data.csv'
+#   surfacefilename: 'atp_winpct_surface.csv'
+#   rankingfilename: 'static_rankings.csv'
+#   savefilename: 'atp_master.csv'
+# generate_features:
+  
+#   clist: [ATP, Location, Tournament, Date, Series, Court, Surface,
+#         Round, Best of, Winner, Loser, WRank, LRank, Wsets, Lsets]
+#   seednumber: 8008
+#   gen_features:
+#     initial_features: [visible_mean, visible_max, visible_min, visible_mean_distribution, visible_contrast, 
+#            visible_entropy, visible_second_angular_momentum, IR_mean, IR_max, IR_min]
+#     output_features: [visible_range, visible_norm_range, log_entropy, entropy_x_contrast, IR_range, IR_norm_range]
+#   gen_target:
+#     target: 'class'
+# modelling:
+#   fit_linear_model:
+#     initial_feature_list: [visible_range, visible_norm_range, log_entropy, IR_mean,
+#     entropy_x_contrast, IR_range, IR_norm_range, visible_mean]
+#     test_size: 0.3

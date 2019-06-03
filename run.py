@@ -15,10 +15,11 @@ import logging.config
 #logger.debug('Test log')
 
 from src.preprocess import run_trimdata, run_rankingstable, run_h2h_record, run_surface_record
+from src.generate_features import run_features
+from src.train_model import train_model
 
 #def run_app(args):
 #    app.run(debug=app.config["DEBUG"], port=app.config["PORT"], host=app.config["HOST"])
-
 
 if __name__ == '__main__':
 
@@ -40,6 +41,14 @@ if __name__ == '__main__':
     sb_surface = subparsers.add_parser("run_surface_record", description="Load data into a dataframe")
     sb_surface.add_argument('--config', help='path to yaml file with configurations')
     sb_surface.set_defaults(func=run_surface_record)
+
+    sb_feature = subparsers.add_parser("run_features", description="Load data into a dataframe")
+    sb_feature.add_argument('--config', help='path to yaml file with configurations')
+    sb_feature.set_defaults(func=run_features)
+
+    sb_model = subparsers.add_parser("train_model", description="Load data into a dataframe")
+    sb_model.add_argument('--config', help='path to yaml file with configurations')
+    sb_model.set_defaults(func=train_model)
 
     args = parser.parse_args()
     args.func(args)

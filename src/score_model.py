@@ -1,22 +1,27 @@
 import train_model
-from sklearn.metrics import accuracy_score
-import matplotlib.pyplot as plt
-from sklearn.ensemble.partial_dependence import partial_dependence, plot_partial_dependence
+import pickle
+import pandas as pd
+import numpy as np
 
-new_model = train_model.newmodel
+def load_model(modelpath = '../models/', modelfilename = 'xgb_model.pkl'):
+    """
+    Load pre-saved pickle model from a pkl file
+    
+    :param rawfilepath (str): relative path of the target file
+    :param filename (str): name of the pickle file to load
 
-# predict on train and test
-preds_train = new_model.predict(train_model.train_features)
-print('train misclassification rate: ', np.sum(preds_train != train_model.train_labels) / train_model.train_features.shape[0])
+    :return: a model file can be used for predictions
+    """
+    path = modelpath + '\\' + modelfilename
+    pickle_in = open(path, 'rb')
+    model = pickle.load(pickle_in)
+    return model
 
-preds_test = new_model.predict(train_model.test_features)
-print('test misclassification rate: ', np.sum(preds_test != train_model.test_labels) / train_model.test_features.shape[0])
+pred_df = pd.DataFrame(columns=train_model.feature_list)
+my_dic = {'Rank_P1': 12, 'Rank_P2': 23, 'mp_surface_P1': 0.5, 'mp_surface_P2': 0.3, 'winpct_surface_P1': 0.12,
+        'winpct_surface_P2': 0.6, 'totalPlayed': 1, 'h2h_win_pct': 0.5}
+pred_df.loc[len(pred_df)] = my_dic
 
-feature_importance = pd.DataFrame(new_model.feature_importances_, index = train_model.feature_list, columns=['importance']).sort_values('importance',ascending=False)
-print(feature_importance)
-print(sum(feature_importance['importance']))
+new_model = load_model()
 
-y_actu = pd.Series(train_model.test_labels, name='Actual')
-y_pred = pd.Series(preds_test, name='Predicted')
-df_confusion = pd.crosstab(y_actu, y_pred)
-df_confusion
+preds_prob = new_model.predict_proba(np.array(pred_df))

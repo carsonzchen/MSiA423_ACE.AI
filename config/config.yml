@@ -32,25 +32,43 @@ run_surface_record:
     rawfilepath: 'data'
     filename: 'atp_winpct_surface.csv'
 
-# load_data:
-#   datafolderpath: '..\\data'
-#   rawfilename: 'atp_data.csv'
-#   surfacefilename: 'atp_winpct_surface.csv'
-#   rankingfilename: 'static_rankings.csv'
-#   savefilename: 'atp_master.csv'
-# generate_features:
-  
-#   clist: [ATP, Location, Tournament, Date, Series, Court, Surface,
-#         Round, Best of, Winner, Loser, WRank, LRank, Wsets, Lsets]
-#   seednumber: 8008
-#   gen_features:
-#     initial_features: [visible_mean, visible_max, visible_min, visible_mean_distribution, visible_contrast, 
-#            visible_entropy, visible_second_angular_momentum, IR_mean, IR_max, IR_min]
-#     output_features: [visible_range, visible_norm_range, log_entropy, entropy_x_contrast, IR_range, IR_norm_range]
-#   gen_target:
-#     target: 'class'
-# modelling:
-#   fit_linear_model:
-#     initial_feature_list: [visible_range, visible_norm_range, log_entropy, IR_mean,
-#     entropy_x_contrast, IR_range, IR_norm_range, visible_mean]
-#     test_size: 0.3
+run_features:
+  read_main:
+    rawfilepath: 'data'
+    filename: 'cleaned_atp.csv'
+  read_h2h:
+    rawfilepath: 'data'
+    filename: 'atp_h2h.csv'
+  read_surface:
+    rawfilepath: 'data'
+    filename: 'atp_winpct_surface.csv'
+  select_columns:
+    columnlist: [ATP, Location, Tournament, Date, Series, Court, Surface,
+            Round, Best of, Winner, Loser, WRank, LRank, Wsets, Lsets]
+  flip_records:
+    seednumber: 8008
+  save_dataset:
+    rawfilepath: 'data'
+    filename: 'atp_features.csv'
+
+train_model:
+  read_features:
+    rawfilepath: 'data'
+    filename: 'atp_features.csv'
+  choose_features:
+    features_to_use: [Rank_P1, Rank_P2, mp_surface_P1, mp_surface_P2, winpct_surface_P1,
+        winpct_surface_P2, totalPlayed, h2h_win_pct]
+    target: matchresult
+  setFeatureType:
+    columns: [Rank_P1, Rank_P2, mp_surface_P1, mp_surface_P2, winpct_surface_P1,
+        winpct_surface_P2, totalPlayed, h2h_win_pct]
+    input_type: float
+  split_train_test:
+    label: matchresult
+    test_size: 0.25
+    random_state: 42
+  fit_xgboost:
+    save_path: 'models/xgb_model.pkl'
+    n_estimators: 150
+    learning_rate: 0.1
+    max_depth: 3

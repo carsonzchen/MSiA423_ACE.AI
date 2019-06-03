@@ -6,8 +6,8 @@ import yaml
 
 import logging
 import logging.config
-from helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
-from preprocess import trim_columns, gen_rankings_static
+from src.helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
+from src.preprocess import trim_columns, select_columns
 
 logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename='pipeline_log.log', level=logging.DEBUG)
 logger = logging.getLogger('generate features')
@@ -141,56 +141,18 @@ def flip_records(df, seednumber):
     logger.info("%s percent of rows are designated as 'W'", str(ds_balance*100))
     return atp_matches
 
-#def run_features(args):
-def run_features(args.config = 'config = yaml.load(f)'):
+def run_features(args):
     """Orchestrates the generating of features from commandline arguments."""
     with open(args.config, "r") as f:
-        config = yaml.load(f)
-
-    if 'load_data' in config:
-        df = read_raw(config["load_data"]["datafolderpath"], config["load_data"]["rawfilename"])
-    else:
-        raise ValueError("Path to CSV for input data must be provided through --csv or "
-                         "load_data configuration must exist in config file")
+        config = yaml.load(f, Loader=yaml.BaseLoader)
     
-    trimmed_data = trim_columns(df, config["generate_features"]["trimlist"])
-    data = select_columns(trimmed_data, config["generate_features"]["clist"])
-    surface_record = read_raw(config["load_data"]["datafolderpath"], config["load_data"]["atp_winpct_surface.csv"])
-    h2h_record = read_raw(config["load_data"]["datafolderpath"], config["load_data"]["static_rankings.csv"])
-    data = add_h2h(data, h2h_record)
-    data = add_surface_winpct(data, surface_record)
-    matches = flip_records(data, config["generate_features"]["seednumber"])
-    save_dataset(matches, config["load_data"]["datafolderpath"], config["load_data"]["rawfilename"])
-
+    df = read_raw(**config["run_features"]['read_main'])
+    data = select_columns(df, **config["run_features"]['select_columns'])
+    h2h_record = read_raw(**config["run_features"]['read_h2h'])
+    surface_record = read_raw(**config["run_features"]['read_surface'])
+    df_h2h = add_h2h(data, h2h_record)
+    df_allfeatures = add_surface_winpct(df_h2h, surface_record)
+    matches = flip_records(df_allfeatures, **config["run_features"]['flip_records'])
+    save_dataset(matches, **config["run_features"]['save_dataset'])
+    f.close()
     return matches
-
-# mypath = '..\\data'
-# myfile = 'atp_data.csv'
-# clist = ['ATP', 'Location', 'Tournament', 'Date', 'Series', 'Court', 'Surface',
-#        'Round', 'Best of', 'Winner', 'Loser', 'WRank', 'LRank', 'Wsets',
-#        'Lsets']
-# trimlist = ['Winner', 'Loser']
-# mysavefile = 'atp_cleaned.csv'
-# surfacefile = 'atp_winpct_surface.csv'
-# rankingssavefile = 'static_rankings.csv'
-# h2hfile = 'atp_h2h.csv'
-# fewMatchAdj_column = ['h2h_win_pct']
-
-# atp_raw = read_raw(mypath, myfile)
-# trimmed_data = trim_columns(atp_raw, trimlist)
-# srank = gen_rankings_static(trimmed_data)
-# save_dataset(srank, mypath, rankingssavefile)
-
-# data = select_columns(trimmed_data, clist)
-# h2h_record = calculate_h2h(data)
-# save_dataset(h2h_record, mypath, h2hfile)
-
-# surface_record = calculate_surface_winpct(data)
-# save_dataset(surface_record, mypath, surfacefile)
-
-# surface_record = read_raw(mypath, surfacefile, dtype = None)
-# h2h_record = read_raw(mypath, h2hfile, dtype = None)
-# df_h2h = add_h2h(data, h2h_record)
-# df_allfeatures = add_surface_winpct(df_h2h, surface_record)
-# matches = flip_records(df_allfeatures, 8008)
-# save_dataset(matches, mypath, mysavefile)

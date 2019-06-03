@@ -2,9 +2,12 @@ import pandas as pd
 import numpy as np
 import random
 
+import argparse
+import yaml
+
 import logging
 import logging.config
-from helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
+from src.helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
 
 logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename='pipeline_log.log', level=logging.DEBUG)
 logger = logging.getLogger('train model')
@@ -50,7 +53,7 @@ def choose_features(df, features_to_use=None, target=None):
 
     return X
 
-def split_train_test(df, label, test_size = 0.25, random_state = 42):
+def split_train_test(df, label, test_size = 0.25, random_state = 42, **kwargs):
     """
     Split dataframe into 4 parts - training features and labels, and test features and labels
 
@@ -73,7 +76,6 @@ def split_train_test(df, label, test_size = 0.25, random_state = 42):
         flist = list(df.columns)
         flist.remove(label)
         features_raw = df[flist]
-
         # One-hot encode features if categorical variables exit
         features_processed = pd.get_dummies(features_raw)
         features = np.array(features_processed)
@@ -83,7 +85,7 @@ def split_train_test(df, label, test_size = 0.25, random_state = 42):
         train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size = test_size, random_state = random_state)
         return [train_features, test_features, train_labels, test_labels]
 
-def fit_xgboost(train_features, train_labels, save_path = '../models/xgb_model.pkl', **kwargs):
+def fit_xgboost(train_features, train_labels, save_path = 'models/xgb_model.pkl', **kwargs):
     """
     Fit the dataset using a xgboost model, with options to save the model as a pickle file. Use outputs
     from split_train_test
@@ -98,35 +100,29 @@ def fit_xgboost(train_features, train_labels, save_path = '../models/xgb_model.p
         X (:py:class:`pandas.DataFrame`): DataFrame containing extracted features (and target, it applicable)
     """
     # Best result: tree: 150 alpha: 0.1 depth: 3
-    xgbmodel = xgb.XGBClassifier(objective ='binary:logistic', n_estimators=150, \
-        learning_rate = 0.1, max_depth = 3).fit(train_features, train_labels)
+    xgbmodel = xgb.XGBClassifier(objective ='binary:logistic', **kwargs).fit(train_features, train_labels)
     if save_path is not None:
         with open(save_path, "wb") as f:
             pickle.dump(xgbmodel, f)
     return xgbmodel
 
-mypath = '..\\data'
-mysavefile = 'atp_cleaned.csv'
-atp_data = read_raw(mypath, mysavefile)
-
-#atp_data = pd.read_csv('../../data/atp_cleaned.csv', encoding = "ISO-8859-1")
-feature_list = ['Rank_P1', 'Rank_P2', 'mp_surface_P1', 'mp_surface_P2', 'winpct_surface_P1',
-        'winpct_surface_P2', 'totalPlayed', 'h2h_win_pct']
-atp_matches_p = choose_features(atp_data, features_to_use=feature_list, target='matchresult')
-
-setFeatureType(atp_matches_p, feature_list, 'float')
-atp_matches_p.axes
-atp_matches_p.dtypes
-#fewGamesCorrection(atp_matches_p, ['h2h_win_pct'])
-
-data = split_train_test(atp_matches_p, 'matchresult')
-train_features = data[0]
-test_features = data[1]
-train_labels = data[2]
-test_labels = data[3]
-print('Training Features Shape:', train_features.shape)
-print('Training Labels Shape:', train_labels.shape)
-print('Testing Features Shape:', test_features.shape)
-print('Testing Labels Shape:', test_labels.shape)
-
-newmodel = fit_xgboost(train_features, train_labels)
+def train_model(args):
+    """Orchestrates the generating of features from commandline arguments."""
+    with open(args.config, "r") as f:
+        config = yaml.load(f, Loader=yaml.SafeLoader)
+    
+    atp_data = read_raw(**config['train_model']['read_features'])
+    atp_matches_p = choose_features(atp_data, **config['train_model']['choose_features'])
+    setFeatureType(atp_matches_p, **config['train_model']['setFeatureType'])
+    data = split_train_test(atp_matches_p, **config['train_model']['split_train_test'])
+    train_features = data[0]
+    test_features = data[1]
+    train_labels = data[2]
+    test_labels = data[3]
+    print('Training Features Shape:', train_features.shape)
+    print('Training Labels Shape:', train_labels.shape)
+    print('Testing Features Shape:', test_features.shape)
+    print('Testing Labels Shape:', test_labels.shape)
+    newmodel = fit_xgboost(train_features, train_labels, **config['train_model']['fit_xgboost'])
+    f.close()
+    return newmodel

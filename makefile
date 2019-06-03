@@ -1,5 +1,9 @@
 .PHONY: test app download cleandata ranking h2h surfacewin features model
 
+data/atp_data.csv: config/config.yml
+	python run.py run_download_source --config=config/config.yml
+download: data/atp_data.csv
+
 data/cleaned_atp.csv: config/config.yml
 	python run.py run_trimdata --config=config/config.yml
 cleandata: data/cleaned_atp.csv
@@ -30,4 +34,4 @@ clean:
 	rm -r models
 	mkdir models
 
-all: cleandata ranking h2h surfacewin features model
+all: clean download cleandata ranking h2h surfacewin features model

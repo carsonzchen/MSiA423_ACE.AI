@@ -14,6 +14,7 @@ import logging.config
 #logger = logging.getLogger("run-penny-lane")
 #logger.debug('Test log')
 
+from src.upload_data import run_download_source
 from src.preprocess import run_trimdata, run_rankingstable, run_h2h_record, run_surface_record
 from src.generate_features import run_features
 from src.train_model import train_model
@@ -25,6 +26,10 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Run components of the model source code")
     subparsers = parser.add_subparsers()
+
+    sb_download = subparsers.add_parser("run_download_source", description="Load data into a dataframe")
+    sb_download.add_argument('--config', help='path to yaml file with configurations')
+    sb_download.set_defaults(func=run_download_source)
 
     sb_trim = subparsers.add_parser("run_trimdata", description="Load data into a dataframe")
     sb_trim.add_argument('--config', help='path to yaml file with configurations')

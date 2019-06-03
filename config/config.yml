@@ -1,3 +1,9 @@
+run_download_source:
+  download_data:
+    sourceurl: 'http://s3.us-east-2.amazonaws.com/nw-carsonchen-acedata/atp_data.csv' 
+    rawfilepath: 'data'
+    filename: "atp_data.csv"
+
 run_trimdata:
   read_raw:
     filename: 'atp_data.csv'

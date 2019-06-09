@@ -1,4 +1,4 @@
-.PHONY: test app download cleandata ranking h2h surfacewin database features model clean all
+.PHONY: test app download folders rawdata ranking h2h surfacewin database features model cleanfiles all
 
 data/atp_data.csv: config/config.yml
 	python run.py run_download_source --config=config/config.yml
@@ -6,7 +6,7 @@ download: data/atp_data.csv
 
 data/cleaned_atp.csv: config/config.yml
 	python run.py run_trimdata --config=config/config.yml
-cleandata: data/cleaned_atp.csv
+rawdata: data/cleaned_atp.csv
 
 data/static_rankings.csv: config/config.yml
 	python run.py run_rankingstable --config=config/config.yml
@@ -34,10 +34,12 @@ models/xgb_model.pkl: config/config.yml
 	python run.py train_model --config=config/config.yml
 model: models/xgb_model.pkl
 
-clean:
+cleanfiles:
 	rm -r data/db data/raw data/processed data/sample
-	mkdir data/db data/raw data/processed data/sample
 	rm -r models/xgboost
+
+folders:
+	mkdir data/db data/raw data/processed data/sample
 	mkdir models/xgboost
 
-all: clean download cleandata ranking h2h surfacewin database features model
+all: download rawdata ranking h2h surfacewin database features model

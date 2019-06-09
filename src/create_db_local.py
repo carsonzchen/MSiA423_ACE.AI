@@ -10,8 +10,8 @@ import sqlalchemy as sql
 
 from src.helpers.helpers import create_connection, get_session
 from src.helpers.helpers import read_raw, setFeatureType
+import config.database_config as conf
 import argparse
-import config
 import yaml
 
 #logging.config.fileConfig(config.LOGGING_CONFIG)
@@ -54,9 +54,14 @@ def df_to_db(args):
     """Orchestrates the generating of features from commandline arguments."""
     with open(args.config, "r") as f:
         config = yaml.load(f, Loader=yaml.BaseLoader)
+
+    if args.rds == True:
+        engine_string = conf.rds_engine_string
+
+    else:
+        engine_string = conf.local_engine_string
     
     if args.option in ['Ranking', 'H2H', 'SurfaceWinPct']:
-        engine_string = config['create_db_local']['engine_string']
         engine = sql.create_engine(engine_string, echo = True)
         Base.metadata.create_all(engine)
         df = read_raw(**config['create_db_local'][args.option]['read_main'])

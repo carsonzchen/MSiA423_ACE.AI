@@ -21,10 +21,16 @@ data/atp_winpct_surface.csv: config/config.yml
 surfacewin: data/atp_winpct_surface.csv
 
 data/db/playerstats.db: config/config.yml
-	python run.py tables_todb --config=config/config.yml --option=H2H
-	python run.py tables_todb --config=config/config.yml --option=Ranking
-	python run.py tables_todb --config=config/config.yml --option=SurfaceWinPct 
+	python run.py tables_todb --config=config/config.yml --rds=False --option=H2H
+	python run.py tables_todb --config=config/config.yml --rds=False --option=Ranking
+	python run.py tables_todb --config=config/config.yml --rds=False --option=SurfaceWinPct 
 database: data/db/playerstats.db
+
+data/db/playerstats_rds.db: config/config.yml
+	python run.py tables_todb --config=config/config.yml --rds=True --option=H2H
+	python run.py tables_todb --config=config/config.yml --rds=True --option=Ranking
+	python run.py tables_todb --config=config/config.yml --rds=True --option=SurfaceWinPct 
+rds: data/db/playerstats_rds.db
 
 data/atp_features.csv: config/config.yml
 	python run.py run_features --config=config/config.yml

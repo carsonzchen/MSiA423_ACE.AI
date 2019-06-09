@@ -51,6 +51,7 @@ if __name__ == '__main__':
     sb_tables_todb = subparsers.add_parser("tables_todb", description="Load data into a dataframe")
     sb_tables_todb.add_argument('--config', help='path to yaml file with configurations')
     sb_tables_todb.add_argument('--option', help='option to choose which file to write to db')
+    sb_tables_todb.add_argument('--rds', default=False, help='option to use RDS database')
     sb_tables_todb.set_defaults(func=df_to_db)
 
     sb_feature = subparsers.add_parser("run_features", description="Load data into a dataframe")

@@ -32,8 +32,8 @@ class Match:
 
   def getRanks(self):
     #engine_string = 'sqlite:///../data/db/rankings.db'
-    query1 = "SELECT * FROM ranking WHERE player = '" + self.player1 + "'"
-    query2 = "SELECT * FROM ranking WHERE player = '" + self.player2 + "'"
+    query1 = "SELECT * FROM Ranking WHERE player = '" + self.player1 + "'"
+    query2 = "SELECT * FROM Ranking WHERE player = '" + self.player2 + "'"
     df1 = pd.read_sql(query1, con=self.engine)
     df2 = pd.read_sql(query2, con=self.engine)
     p1rank = df1['Rank'].iloc[0]
@@ -41,15 +41,15 @@ class Match:
     return {'Rank_P1': int(p1rank), 'Rank_P2': int(p2rank)}
 
   def geth2h(self):
-    queryh2h = "SELECT * FROM h2h WHERE Winner = '" + self.player1 + "' AND Loser = '" + self.player2 + "'"
+    queryh2h = "SELECT * FROM H2H WHERE Winner = '" + self.player1 + "' AND Loser = '" + self.player2 + "'"
     row = pd.read_sql(queryh2h, con=self.engine)
     tp = row['totalPlayed'].iloc[0]
     pct = row['h2h_win_pct'].iloc[0]
     return {'totalPlayed': float(tp), 'h2h_win_pct': float(pct)}
 
   def getSurface(self):
-    querysurf1 = "SELECT * FROM surfacewinpct WHERE Player = '" + self.player1 + "' AND Surface = '" + self.court + "'"
-    querysurf2 = "SELECT * FROM surfacewinpct WHERE Player = '" + self.player2 + "' AND Surface = '" + self.court + "'"
+    querysurf1 = "SELECT * FROM SurfaceWinPct WHERE Player = '" + self.player1 + "' AND Surface = '" + self.court + "'"
+    querysurf2 = "SELECT * FROM SurfaceWinPct WHERE Player = '" + self.player2 + "' AND Surface = '" + self.court + "'"
     surf1 = pd.read_sql(querysurf1, con=self.engine)
     surf2 = pd.read_sql(querysurf2, con=self.engine)
     p1m = surf1['surf_matches'].iloc[0]

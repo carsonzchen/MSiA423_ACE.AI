@@ -17,6 +17,7 @@ DEBUG = True
 # Local Database connection config
 local_engine_string = 'sqlite:///data/db/playerstats.db'
 HOST = "127.0.0.1"
+#HOST = "172.31.29.22"
 PORT = "3000"
 
 # Database connection config
@@ -26,10 +27,10 @@ CONN_TYPE = "mysql+pymysql"
 USER = os.environ.get("MYSQL_USER")
 PASSWORD = os.environ.get("MYSQL_PASSWORD")
 DATABASE_NAME = 'playerstats'
-#HOST = 'mysql-nw-carsonchen.cvtyax3otjph.us-east-2.rds.amazonaws.com'
-#PORT = '3306'
+RDS_HOST = 'mysql-nw-carsonchen.cvtyax3otjph.us-east-2.rds.amazonaws.com'
+RDS_PORT = '3306'
 rds_engine_string = "{}://{}:{}@{}:{}/{}".\
-format(CONN_TYPE, USER, PASSWORD, HOST, PORT, DATABASE_NAME)
+format(CONN_TYPE, USER, PASSWORD, RDS_HOST, RDS_PORT, DATABASE_NAME)
 
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_ECHO = False  # If true, SQL for queries made will be printed

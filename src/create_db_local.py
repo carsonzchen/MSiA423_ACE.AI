@@ -22,10 +22,10 @@ logger = logging.getLogger(__file__)
 
 Base = declarative_base()
 
-class rankings_db(Base):
+class ranking_db(Base):
     """ Defines the data model for the table `Rankings`. """
 
-    __tablename__ = 'Rankings'
+    __tablename__ = 'Ranking'
 
     player = Column(String(100), primary_key=True, unique=True, nullable=False)
     rank = Column(Integer, unique=False, nullable=False)
@@ -34,7 +34,7 @@ class rankings_db(Base):
         rankings_repr = "<Rankings(player='%s', rank='%s')>"
         return rankings_repr % (self.player, self.rank)
 
-class rankings_h2h(Base):
+class h2h_db(Base):
     """ Defines the data model for the table `Rankings`. """
 
     __tablename__ = 'H2H'

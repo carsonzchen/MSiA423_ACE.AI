@@ -10,7 +10,7 @@ from score_model_db import assemble_data, score_model
 app = Flask(__name__)
 
 # Configure flask app from flask_config.py
-#app.config.from_pyfile('../config/flask_config.py')
+#app.config.from_pyfile('config/flask_config.py')
 app.config.from_pyfile('../config/flask_config.py')
 
 # Define LOGGING_CONFIG in flask_config.py - path to config file for setting
@@ -18,7 +18,6 @@ app.config.from_pyfile('../config/flask_config.py')
 #logging.config.fileConfig(app.config["LOGGING_CONFIG"])
 logger = logging.getLogger("penny-lane")
 logger.debug('Test log')
-print(str(app.config["ENGINE_STRING"]))
 # Initialize the database
 #db = SQLAlchemy(app)
 
@@ -58,11 +57,8 @@ def add_entry():
     try:
         #track1 = Tracks(artist=request.form['artist'], album=request.form['album'], title=request.form['title'])
         player1 = request.form['player1_name']
-        print(player1)
         player2 = request.form['player2_name']
-        print(player2)
         surface = request.form['surface']
-        print(surface)
         df = assemble_data(player1, player2, surface, app.config["ENGINE_STRING"])
         print(df.head(1))
         p1win = score_model(player1, player2, surface, app.config["ENGINE_STRING"])

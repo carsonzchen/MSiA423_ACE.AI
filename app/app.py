@@ -36,14 +36,16 @@ def index():
     try:
         #tracks = db.session.query(Tracks).limit(app.config["MAX_ROWS_SHOW"]).all()
         logger.debug("Index page accessed")
-        print(app.config["ENGINE_STRING"])
-        #return render_template('index.html', tracks=tracks)
         return render_template('index.html')
     except:
         traceback.print_exc()
         logger.warning("Not able to display tracks, error page returned")
         return render_template('error.html')
 
+@app.route('/about')
+def about():
+    logger.debug("About page accessed")
+    return render_template('about.html')
 
 @app.route('/add', methods=['POST', 'GET'])
 def add_entry():

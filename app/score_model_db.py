@@ -16,7 +16,7 @@ def load_model(modelpath = '../models/xgboost', modelfilename = 'xgb_model.pkl')
 
     :return: a model file can be used for predictions
     """
-    path = modelpath + '\\' + modelfilename
+    path = modelpath + '//' + modelfilename
     pickle_in = open(path, 'rb')
     model = pickle.load(pickle_in)
     return model
@@ -78,29 +78,8 @@ def assemble_data(p1, p2, surface, engine_string = 'sqlite:///../data/db/players
     pred_df.loc[len(pred_df)] = play_dic
     return pred_df
 
-def score_model(p1, p2, surface, engine_string = 'sqlite:///../data/db/playerstats.db', args = None):
+def score_model(pred_df, modelpath = '../models/xgboost', modelfilename = 'xgb_model.pkl'):
     """Orchestrates the generating of features from commandline arguments."""
-    pred_df = assemble_data(p1, p2, surface, engine_string, args)
-    new_model = load_model('../models/xgboost', 'xgb_model.pkl')
+    new_model = load_model(modelpath, modelfilename)
     preds_prob = new_model.predict_proba(np.array(pred_df))
-    print(preds_prob)
     return preds_prob.item(1)
-
-# engine_string = 'sqlite:///../data/db/playerstats.db'
-# #engine_string = config['create_db_local'][args.option]['engine_string']
-# engine = sql.create_engine(engine_string, echo = True)
-# #Session = sessionmaker(bind=engine)
-# #session = Session()
-# query = "SELECT * FROM ranking WHERE player = 'Nadal R.'"
-# df = pd.read_sql(query, con=engine)
-
-
-# query2 = "SELECT * FROM h2h WHERE Winner = 'Nadal R.' AND Loser = 'Federer R.'"
-# df2 = pd.read_sql(query2, con=engine)
-
-# p1 = 'Nadal R.'
-# p2 = 'Federer R.'
-# s1 = 'Grass'
-# nm = Match(p1, p2, s1, 'sqlite:///../data/db/playerstats.db')
-# query3 = "SELECT * FROM surfacewinpct WHERE Player = '" + p1 + "' AND Surface = '" + s1 + "'"
-# df3 = pd.read_sql(query3, con=engine)

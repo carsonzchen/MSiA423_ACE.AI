@@ -18,7 +18,7 @@ def read_raw(rawfilepath, filename, **kwargs):
 
     :return: a pandas dataframe of the raw file
     """
-    path = rawfilepath + '\\' + filename
+    path = rawfilepath + '//' + filename
     try:
         rawfile = pd.read_csv(path, encoding = "ISO-8859-1", dtype=object)
         logger.info("Load file from %s", path)

@@ -16,7 +16,7 @@ import logging.config
 
 from src.upload_data import run_download_source
 from src.preprocess import run_trimdata, run_rankingstable, run_h2h_record, run_surface_record
-from src.create_db_local import df_to_db 
+from src.create_db import df_to_db 
 from src.generate_features import run_features
 from src.train_model import train_model
 
@@ -61,15 +61,6 @@ if __name__ == '__main__':
     sb_model = subparsers.add_parser("train_model", description="Load data into a dataframe")
     sb_model.add_argument('--config', help='path to yaml file with configurations')
     sb_model.set_defaults(func=train_model)
-
-    # sb_score = subparsers.add_parser("score_model_db", description="Score model")
-    # sb_score.add_argument('--config', help='path to yaml file with configurations')
-    # sb_score.add_argument('--input', default=None, help="Path to CSV for input to model scoring")
-    # sb_score.add_argument('--output', default=None, help='Path to where the dataset should be saved to (optional')
-    # sb_score.set_defaults(func=run_scoring)
-
-    # sb_run = subparsers.add_parser("app", description="Run Flask app")
-    # sb_run.set_defaults(func=run_app)
 
     args = parser.parse_args()
     args.func(args)

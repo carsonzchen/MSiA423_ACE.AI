@@ -61,7 +61,7 @@ def add_entry():
         surface = request.form['surface']
         df = assemble_data(player1, player2, surface, app.config["ENGINE_STRING"])
         print(df.head(1))
-        p1win = score_model(player1, player2, surface, app.config["ENGINE_STRING"])
+        p1win = score_model(df)
         print(p1win)
         result = pctDisplay(p1win)
 

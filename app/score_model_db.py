@@ -59,21 +59,13 @@ class Match:
     return {'mp_surface_P1': float(p1m), 'mp_surface_P2': float(p2m), 'winpct_surface_P1': float(p1winp),
         'winpct_surface_P2': float(p2winp)}    
 
-#k = Match('Nadal R.', 'Federer R.', 'Clay')
-#my_dic = {'Rank_P1': 12, 'Rank_P2': 23, 'mp_surface_P1': 0.5, 'mp_surface_P2': 0.3, 'winpct_surface_P1': 0.12,
-#        'winpct_surface_P2': 0.6, 'totalPlayed': 1, 'h2h_win_pct': 0.5}
-#feature_list = ['Rank_P1', 'Rank_P2', 'mp_surface_P1', 'mp_surface_P2', 'winpct_surface_P1',
-# 'winpct_surface_P2', 'totalPlayed', 'h2h_win_pct']
-
-def assemble_data(p1, p2, surface, args = None):
+def assemble_data(p1, p2, surface, engine_string = 'sqlite:///../data/db/playerstats.db', args = None):
     """Orchestrates the generating of features from commandline arguments."""
     if args != None:
         with open(args.config, "r") as f:
             config = yaml.load(f, Loader=yaml.BaseLoader)
-        engine_string = config['score_model']['engine_string']
         feature_list = config['score_model']['columns']
     else:
-        engine_string = 'sqlite:///../data/db/playerstats.db'
         feature_list = ['Rank_P1', 'Rank_P2', 'h2h_win_pct', 'mp_surface_P1', 'mp_surface_P2', 'totalPlayed', 'winpct_surface_P1',
         'winpct_surface_P2']
 
@@ -86,9 +78,9 @@ def assemble_data(p1, p2, surface, args = None):
     pred_df.loc[len(pred_df)] = play_dic
     return pred_df
 
-def score_model(p1, p2, surface, args = None):
+def score_model(p1, p2, surface, engine_string = 'sqlite:///../data/db/playerstats.db', args = None):
     """Orchestrates the generating of features from commandline arguments."""
-    pred_df = assemble_data(p1, p2, surface, args)
+    pred_df = assemble_data(p1, p2, surface, engine_string, args)
     new_model = load_model('../models/xgboost', 'xgb_model.pkl')
     preds_prob = new_model.predict_proba(np.array(pred_df))
     print(preds_prob)

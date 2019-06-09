@@ -10,7 +10,7 @@ import sqlalchemy as sql
 
 from src.helpers.helpers import create_connection, get_session
 from src.helpers.helpers import read_raw, setFeatureType
-import config.database_config as conf
+import config.flask_config as conf
 import argparse
 import yaml
 
@@ -55,7 +55,7 @@ def df_to_db(args):
     with open(args.config, "r") as f:
         config = yaml.load(f, Loader=yaml.BaseLoader)
 
-    if args.rds == True:
+    if args.rds == 'True':
         engine_string = conf.rds_engine_string
 
     else:

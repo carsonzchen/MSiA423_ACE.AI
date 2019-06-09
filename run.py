@@ -62,5 +62,14 @@ if __name__ == '__main__':
     sb_model.add_argument('--config', help='path to yaml file with configurations')
     sb_model.set_defaults(func=train_model)
 
+    # sb_score = subparsers.add_parser("score_model_db", description="Score model")
+    # sb_score.add_argument('--config', help='path to yaml file with configurations')
+    # sb_score.add_argument('--input', default=None, help="Path to CSV for input to model scoring")
+    # sb_score.add_argument('--output', default=None, help='Path to where the dataset should be saved to (optional')
+    # sb_score.set_defaults(func=run_scoring)
+
+    # sb_run = subparsers.add_parser("app", description="Run Flask app")
+    # sb_run.set_defaults(func=run_app)
+
     args = parser.parse_args()
     args.func(args)

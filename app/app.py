@@ -18,7 +18,7 @@ app.config.from_pyfile('../config/flask_config.py')
 #logging.config.fileConfig(app.config["LOGGING_CONFIG"])
 logger = logging.getLogger("penny-lane")
 logger.debug('Test log')
-
+print(str(app.config["ENGINE_STRING"]))
 # Initialize the database
 #db = SQLAlchemy(app)
 
@@ -37,6 +37,7 @@ def index():
     try:
         #tracks = db.session.query(Tracks).limit(app.config["MAX_ROWS_SHOW"]).all()
         logger.debug("Index page accessed")
+        print(app.config["ENGINE_STRING"])
         #return render_template('index.html', tracks=tracks)
         return render_template('index.html')
     except:
@@ -57,10 +58,15 @@ def add_entry():
     try:
         #track1 = Tracks(artist=request.form['artist'], album=request.form['album'], title=request.form['title'])
         player1 = request.form['player1_name']
+        print(player1)
         player2 = request.form['player2_name']
+        print(player2)
         surface = request.form['surface']
-        df = assemble_data(player1, player2, surface)
-        p1win = score_model(player1, player2, surface)
+        print(surface)
+        df = assemble_data(player1, player2, surface, app.config["ENGINE_STRING"])
+        print(df.head(1))
+        p1win = score_model(player1, player2, surface, app.config["ENGINE_STRING"])
+        print(p1win)
         result = pctDisplay(p1win)
 
         p1h2h = int(df['totalPlayed'][0]*df['h2h_win_pct'][0])

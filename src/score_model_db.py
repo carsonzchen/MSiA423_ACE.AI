@@ -7,10 +7,10 @@ import yaml
 
 import sqlalchemy as sql
 
-from src.helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
-#from helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
+#from src.helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
+from helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
 
-def load_model(modelpath = '../models/', modelfilename = 'xgb_model.pkl'):
+def load_model(modelpath = '../models/xgboost/', modelfilename = 'xgb_model.pkl'):
     """
     Load pre-saved pickle model from a pkl file
     

@@ -7,7 +7,7 @@ import yaml
 from xgboost import XGBClassifier
 import sqlalchemy as sql
 
-def load_model(modelpath = '../models/', modelfilename = 'xgb_model.pkl'):
+def load_model(modelpath = '../models/xgboost', modelfilename = 'xgb_model.pkl'):
     """
     Load pre-saved pickle model from a pkl file
     
@@ -89,11 +89,10 @@ def assemble_data(p1, p2, surface, args = None):
 def score_model(p1, p2, surface, args = None):
     """Orchestrates the generating of features from commandline arguments."""
     pred_df = assemble_data(p1, p2, surface, args)
-    new_model = load_model('../models/', 'xgb_model.pkl')
+    new_model = load_model('../models/xgboost', 'xgb_model.pkl')
     preds_prob = new_model.predict_proba(np.array(pred_df))
     print(preds_prob)
-    prob_string = str(round(preds_prob.item(1)*100, 2)) + '%'
-    return prob_string
+    return preds_prob.item(1)
 
 # engine_string = 'sqlite:///../data/db/playerstats.db'
 # #engine_string = config['create_db_local'][args.option]['engine_string']

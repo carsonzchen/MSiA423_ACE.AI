@@ -40,11 +40,6 @@ if __name__ == '__main__':
     sb_rankings.add_argument('--config', help='path to yaml file with configurations')
     sb_rankings.set_defaults(func=run_rankingstable)
 
-    sb_rankings_todb = subparsers.add_parser("tables_todb", description="Load data into a dataframe")
-    sb_rankings_todb.add_argument('--config', help='path to yaml file with configurations')
-    sb_rankings_todb.add_argument('--option', help='option to choose which file to write to db')
-    sb_rankings_todb.set_defaults(func=df_to_db)
-
     sb_h2h = subparsers.add_parser("run_h2h_record", description="Load data into a dataframe")
     sb_h2h.add_argument('--config', help='path to yaml file with configurations')
     sb_h2h.set_defaults(func=run_h2h_record)
@@ -52,6 +47,11 @@ if __name__ == '__main__':
     sb_surface = subparsers.add_parser("run_surface_record", description="Load data into a dataframe")
     sb_surface.add_argument('--config', help='path to yaml file with configurations')
     sb_surface.set_defaults(func=run_surface_record)
+
+    sb_tables_todb = subparsers.add_parser("tables_todb", description="Load data into a dataframe")
+    sb_tables_todb.add_argument('--config', help='path to yaml file with configurations')
+    sb_tables_todb.add_argument('--option', help='option to choose which file to write to db')
+    sb_tables_todb.set_defaults(func=df_to_db)
 
     sb_feature = subparsers.add_parser("run_features", description="Load data into a dataframe")
     sb_feature.add_argument('--config', help='path to yaml file with configurations')

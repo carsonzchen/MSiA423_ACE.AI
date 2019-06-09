@@ -1,52 +1,52 @@
 run_download_source:
   download_data:
     sourceurl: 'http://s3.us-east-2.amazonaws.com/nw-carsonchen-acedata/atp_data.csv' 
-    rawfilepath: 'data'
+    rawfilepath: 'data/raw'
     filename: "atp_data.csv"
 
 run_trimdata:
   read_raw:
     filename: 'atp_data.csv'
-    rawfilepath: 'data'
+    rawfilepath: 'data/raw'
   trim_columns: 
     columnlist: ['Winner', 'Loser']
   save_dataset:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'cleaned_atp.csv'
 
 run_rankingstable:
   read_raw:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'cleaned_atp.csv'
   save_dataset:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'static_rankings.csv'
 
 run_h2h_record:
   read_raw:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'cleaned_atp.csv'
   save_dataset:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'atp_h2h.csv'
 
 run_surface_record:
   read_raw:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'cleaned_atp.csv'
   save_dataset:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'atp_winpct_surface.csv'
 
 run_features:
   read_main:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'cleaned_atp.csv'
   read_h2h:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'atp_h2h.csv'
   read_surface:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'atp_winpct_surface.csv'
   select_columns:
     columnlist: [ATP, Location, Tournament, Date, Series, Court, Surface,
@@ -54,12 +54,12 @@ run_features:
   flip_records:
     seednumber: 8008
   save_dataset:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'atp_features.csv'
 
 train_model:
   read_features:
-    rawfilepath: 'data'
+    rawfilepath: 'data/processed'
     filename: 'atp_features.csv'
   choose_features:
     features_to_use: [Rank_P1, Rank_P2, h2h_win_pct, mp_surface_P1, mp_surface_P2, totalPlayed, winpct_surface_P1,
@@ -74,7 +74,7 @@ train_model:
     test_size: 0.25
     random_state: 42
   fit_xgboost:
-    save_path: 'models/xgb_model.pkl'
+    save_path: 'models/xgboost/xgb_model.pkl'
     n_estimators: 150
     learning_rate: 0.1
     max_depth: 3
@@ -88,21 +88,21 @@ create_db_local:
   engine_string: 'sqlite:///data/db/playerstats.db'
   Ranking:
     read_main:
-      rawfilepath: 'data'
+      rawfilepath: 'data/processed'
       filename: 'static_rankings.csv'
     setFeatureType:
       columns: [Rank]
       input_type: 'int'
   H2H:
     read_main:
-      rawfilepath: 'data'
+      rawfilepath: 'data/processed'
       filename: 'atp_h2h.csv'
     setFeatureType:
       columns: [h2h_win, h2h_lost, totalPlayed, h2h_win_pct]
       input_type: 'float'
   SurfaceWinPct:
     read_main:
-      rawfilepath: 'data'
+      rawfilepath: 'data/processed'
       filename: 'atp_winpct_surface.csv'
     setFeatureType:
       columns: [surf_matches, surf_winpct]

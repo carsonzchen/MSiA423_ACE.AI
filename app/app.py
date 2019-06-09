@@ -59,18 +59,31 @@ def add_entry():
         player1 = request.form['player1_name']
         player2 = request.form['player2_name']
         surface = request.form['surface']
+        df = assemble_data(player1, player2, surface)
         p1win = score_model(player1, player2, surface)
+        result = pctDisplay(p1win)
+
+        p1h2h = int(df['totalPlayed'][0]*df['h2h_win_pct'][0])
+        p2h2h = int(df['totalPlayed'][0] - p1h2h)
+        p1rank = int(df['Rank_P1'][0])
+        p2rank = int(df['Rank_P2'][0])
+        winpctp1 = pctDisplay(df['winpct_surface_P1'][0])
+        winpctp2 = pctDisplay(df['winpct_surface_P2'][0])
         #db.session.add(track1)
         #db.session.commit()
         #logger.info("New song added: %s by %s", request.form['title'], request.form['artist'])
-        result = "Hooray, {} will play {} on {} now! {} has an expected {} chance to win".format(player1, player2, surface, player1, p1win)
+        #result = "Hooray, {} will play {} on {} now! {} has an expected {} chance to win".format(player1, player2, surface, player1, p1win)
         #return redirect(url_for('index'))
-        return render_template('index.html', result=result)
+        return render_template('index.html', p1 = player1, p2 = player2, surf = surface, result=result, 
+            p1h2h = p1h2h, p2h2h = p2h2h, p1rank = p1rank, p2rank = p2rank, winpctp1 = winpctp1, winpctp2 = winpctp2)
         #return redirect(url_for('index'))
     except:
-        logger.warning("Not able to display tracks, error page returned")
-        return render_template('index.html')
-        #return render_template('error.html')
+        logger.warning("Not able to display tracks, error page returned...")
+        #return render_template('index.html')
+        return render_template('error.html')
 
-if __name__ == '__main__':
+def pctDisplay(floatinput):
+    return str(round(floatinput*100, 2)) + '%'
+
+if __name__ == "__main__":
     app.run(debug=app.config["DEBUG"], port=app.config["PORT"], host=app.config["HOST"])

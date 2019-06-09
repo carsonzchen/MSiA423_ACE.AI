@@ -1,1 +1,0 @@
-This is the only directory in `data/` that is synced with Github. It should contain small samples of input data to use to test code. 

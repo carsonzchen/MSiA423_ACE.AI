@@ -20,6 +20,12 @@ data/atp_winpct_surface.csv: config/config.yml
 	python run.py run_surface_record --config=config/config.yml
 surfacewin: data/atp_winpct_surface.csv
 
+data/db/playerstats.db: config/config.yml
+	python run.py tables_todb --config=config/config.yml --option=H2H
+	python run.py tables_todb --config=config/config.yml --option=Ranking
+	python run.py tables_todb --config=config/config.yml --option=SurfaceWinPct 
+database: data/db/playerstats.db
+
 data/atp_features.csv: config/config.yml
 	python run.py run_features --config=config/config.yml
 features: data/atp_features.csv
@@ -34,4 +40,4 @@ clean:
 	rm -r models
 	mkdir models
 
-all: clean download cleandata ranking h2h surfacewin features model
+all: clean download cleandata ranking h2h surfacewin database features model

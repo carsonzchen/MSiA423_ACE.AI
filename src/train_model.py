@@ -8,6 +8,7 @@ import yaml
 import logging
 import logging.config
 from src.helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
+#from helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
 
 logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename='pipeline_log.log', level=logging.DEBUG)
 logger = logging.getLogger('train model')
@@ -119,6 +120,10 @@ def train_model(args):
     test_features = data[1]
     train_labels = data[2]
     test_labels = data[3]
+    np.savetxt("data/sample/train_features.csv", train_features, fmt='%5s', delimiter=",")
+    np.savetxt("data/sample/test_features.csv", test_features, fmt='%5s', delimiter=",")
+    np.savetxt("data/sample/train_labels.csv", train_labels, fmt='%s', delimiter=",")
+    np.savetxt("data/sample/test_labels.csv", test_labels, fmt='%s', delimiter=",")
     print('Training Features Shape:', train_features.shape)
     print('Training Labels Shape:', train_labels.shape)
     print('Testing Features Shape:', test_features.shape)

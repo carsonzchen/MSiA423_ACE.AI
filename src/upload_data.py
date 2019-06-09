@@ -1,4 +1,4 @@
-import boto3
+#import boto3
 import requests
 import yaml
 import argparse
@@ -55,9 +55,9 @@ def run_download_source(args):
     f.close()
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Upload data to specific S3 bucket')
-    parser.add_argument("--bucket", help="input s3 bucket name")
-    args = parser.parse_args()
-    download_data(config.data_permanent_url, config.file_name)
-    upload_data(args)
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser(description='Upload data to specific S3 bucket')
+#     parser.add_argument("--bucket", help="input s3 bucket name")
+#     args = parser.parse_args()
+#     download_data(config.data_permanent_url, config.file_name)
+#     upload_data(args)

@@ -16,6 +16,7 @@ import logging.config
 
 from src.upload_data import run_download_source
 from src.preprocess import run_trimdata, run_rankingstable, run_h2h_record, run_surface_record
+from src.create_db_local import df_to_db 
 from src.generate_features import run_features
 from src.train_model import train_model
 
@@ -38,6 +39,11 @@ if __name__ == '__main__':
     sb_rankings = subparsers.add_parser("run_rankingstable", description="Load data into a dataframe")
     sb_rankings.add_argument('--config', help='path to yaml file with configurations')
     sb_rankings.set_defaults(func=run_rankingstable)
+
+    sb_rankings_todb = subparsers.add_parser("tables_todb", description="Load data into a dataframe")
+    sb_rankings_todb.add_argument('--config', help='path to yaml file with configurations')
+    sb_rankings_todb.add_argument('--option', help='option to choose which file to write to db')
+    sb_rankings_todb.set_defaults(func=df_to_db)
 
     sb_h2h = subparsers.add_parser("run_h2h_record", description="Load data into a dataframe")
     sb_h2h.add_argument('--config', help='path to yaml file with configurations')

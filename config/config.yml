@@ -62,12 +62,12 @@ train_model:
     rawfilepath: 'data'
     filename: 'atp_features.csv'
   choose_features:
-    features_to_use: [Rank_P1, Rank_P2, mp_surface_P1, mp_surface_P2, winpct_surface_P1,
-        winpct_surface_P2, totalPlayed, h2h_win_pct]
+    features_to_use: [Rank_P1, Rank_P2, h2h_win_pct, mp_surface_P1, mp_surface_P2, totalPlayed, winpct_surface_P1,
+        winpct_surface_P2]
     target: matchresult
   setFeatureType:
-    columns: [Rank_P1, Rank_P2, mp_surface_P1, mp_surface_P2, winpct_surface_P1,
-        winpct_surface_P2, totalPlayed, h2h_win_pct]
+    columns: [Rank_P1, Rank_P2, h2h_win_pct, mp_surface_P1, mp_surface_P2, totalPlayed, winpct_surface_P1,
+        winpct_surface_P2]
     input_type: float
   split_train_test:
     label: matchresult
@@ -78,3 +78,32 @@ train_model:
     n_estimators: 150
     learning_rate: 0.1
     max_depth: 3
+
+score_model:
+  engine_string: 'sqlite:///../data/db/playerstats.db'
+  columns: [Rank_P1, Rank_P2, h2h_win_pct, mp_surface_P1, mp_surface_P2, totalPlayed, winpct_surface_P1,
+        winpct_surface_P2]
+
+create_db_local:
+  engine_string: 'sqlite:///data/db/playerstats.db'
+  Ranking:
+    read_main:
+      rawfilepath: 'data'
+      filename: 'static_rankings.csv'
+    setFeatureType:
+      columns: [Rank]
+      input_type: 'int'
+  H2H:
+    read_main:
+      rawfilepath: 'data'
+      filename: 'atp_h2h.csv'
+    setFeatureType:
+      columns: [h2h_win, h2h_lost, totalPlayed, h2h_win_pct]
+      input_type: 'float'
+  SurfaceWinPct:
+    read_main:
+      rawfilepath: 'data'
+      filename: 'atp_winpct_surface.csv'
+    setFeatureType:
+      columns: [surf_matches, surf_winpct]
+      input_type: 'float'

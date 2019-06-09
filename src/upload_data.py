@@ -22,7 +22,7 @@ def download_data(sourceurl, rawfilepath, filename):
 
     :return: None
     """
-    path = rawfilepath + '\\' + filename
+    path = rawfilepath + '//' + filename
     try:
         r = requests.get(sourceurl)
         logger.info("Download %s from bucket %s", path, sourceurl)

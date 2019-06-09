@@ -35,7 +35,7 @@ def save_dataset(df, rawfilepath, filename):
 
     :return: none
     """
-    path = rawfilepath + '\\' + filename
+    path = rawfilepath + '//' + filename
     df.to_csv(path, index=False)
     
 def setFeatureType(df, columns, input_type):

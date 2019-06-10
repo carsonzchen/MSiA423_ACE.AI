@@ -14,7 +14,7 @@ import logging.config
 #logger = logging.getLogger("run-penny-lane")
 #logger.debug('Test log')
 
-from src.upload_data import run_download_source
+from src.download_upload_data import run_download_source, upload_data
 from src.preprocess import run_trimdata, run_rankingstable, run_h2h_record, run_surface_record
 from src.create_db import df_to_db 
 from src.generate_features import run_features
@@ -53,6 +53,12 @@ if __name__ == '__main__':
     sb_tables_todb.add_argument('--option', help='option to choose which file to write to db')
     sb_tables_todb.add_argument('--rds', default=False, help='option to use RDS database')
     sb_tables_todb.set_defaults(func=df_to_db)
+
+    sb_upload = subparsers.add_parser("upload_data", description="Load data into a dataframe")
+    sb_upload.add_argument('--localfolder', help='local folder containing data to upload')
+    sb_upload.add_argument('--filename', help='file name of the data to upload')
+    sb_upload.add_argument('--bucket', help='AWS S3 bucket to store the uploaded data')
+    sb_upload.set_defaults(func=upload_data)
 
     sb_feature = subparsers.add_parser("run_features", description="Load data into a dataframe")
     sb_feature.add_argument('--config', help='path to yaml file with configurations')

@@ -1,4 +1,4 @@
-.PHONY: test app download folders rawdata ranking h2h surfacewin database features model cleanfiles all
+.PHONY: test app download folders rawdata ranking h2h surfacewin database rds features model reset all
 
 data/atp_data.csv: config/config.yml
 	python run.py run_download_source --config=config/config.yml
@@ -26,11 +26,14 @@ data/db/playerstats.db: config/config.yml
 	python run.py tables_todb --config=config/config.yml --rds=False --option=SurfaceWinPct 
 database: data/db/playerstats.db
 
-data/db/playerstats_rds.db: config/config.yml
+rds: config/config.yml
 	python run.py tables_todb --config=config/config.yml --rds=True --option=H2H
 	python run.py tables_todb --config=config/config.yml --rds=True --option=Ranking
 	python run.py tables_todb --config=config/config.yml --rds=True --option=SurfaceWinPct 
-rds: data/db/playerstats_rds.db
+
+upload:
+	python run.py upload_data --localfolder=data/raw --filename=atp_data.csv --bucket=nw-carsonchen-423ace
+	python run.py upload_data --localfolder=data/processed --filename=atp_features.csv --bucket=nw-carsonchen-423ace
 
 data/atp_features.csv: config/config.yml
 	python run.py run_features --config=config/config.yml
@@ -40,12 +43,12 @@ models/xgb_model.pkl: config/config.yml
 	python run.py train_model --config=config/config.yml
 model: models/xgb_model.pkl
 
-cleanfiles:
-	rm -r data/db data/raw data/processed data/sample
-	rm -r models/xgboost
-
-folders:
+reset:
+	rm -r data
+	rm -r models
+	mkdir data
 	mkdir data/db data/raw data/processed data/sample
+	mkdir models
 	mkdir models/xgboost
 
 all: download rawdata ranking h2h surfacewin database features model

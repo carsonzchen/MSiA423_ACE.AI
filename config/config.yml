@@ -80,12 +80,10 @@ train_model:
     max_depth: 3
 
 score_model:
-  # engine_string: 'sqlite:///data/db/playerstats.db'
   columns: [Rank_P1, Rank_P2, h2h_win_pct, mp_surface_P1, mp_surface_P2, totalPlayed, winpct_surface_P1,
         winpct_surface_P2]
 
 create_db_local:
-  # engine_string: 'sqlite:///data/db/playerstats.db'
   Ranking:
     read_main:
       rawfilepath: 'data/processed'

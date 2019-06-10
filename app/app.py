@@ -1,7 +1,6 @@
 import traceback
 from flask import render_template, request, redirect, url_for
 import logging.config
-# from app.models import Tracks
 from flask import Flask
 from score_model_db import assemble_data, score_model
 #from flask_sqlalchemy import SQLAlchemy
@@ -62,9 +61,7 @@ def add_entry():
         player2 = request.form['player2_name']
         surface = request.form['surface']
         df = assemble_data(player1, player2, surface, app.config["ENGINE_STRING"])
-        print(df.head(1))
         p1win = score_model(df)
-        print(p1win)
         result = pctDisplay(p1win)
 
         p1h2h = int(df['totalPlayed'][0]*df['h2h_win_pct'][0])
@@ -80,10 +77,8 @@ def add_entry():
         #return redirect(url_for('index'))
         return render_template('index.html', p1 = player1, p2 = player2, surf = surface, result=result, 
             p1h2h = p1h2h, p2h2h = p2h2h, p1rank = p1rank, p2rank = p2rank, winpctp1 = winpctp1, winpctp2 = winpctp2)
-        #return redirect(url_for('index'))
     except:
         logger.warning("Not able to display tracks, error page returned...")
-        #return render_template('index.html')
         return render_template('error.html')
 
 def pctDisplay(floatinput):

@@ -2,12 +2,10 @@ import numpy as np
 import pandas as pd
 import argparse
 import yaml
-import logging
-import logging.config
 from src.helpers.helpers import read_raw, save_dataset, setFeatureType, fillColumnNAs
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename='pipeline_log.log', level=logging.DEBUG)
-logger = logging.getLogger('generate features')
+import logging
+logger = logging.getLogger(__name__)
 
 def trim_columns(df, columnlist):
     """
@@ -126,8 +124,6 @@ def calculate_surface_winpct(df):
         surface = surf_win.merge(surf_lost, how='outer', \
                 left_on=['Winner', 'Surface'], right_on=['Loser', 'Surface'])
         surface.loc[(pd.isnull(surface.Winner), 'Winner')] = surface.Loser
-        #surface.loc[(pd.isnull(surface.Loser), 'Loser')] = surface.Winner
-        #surface = surface.fillna(0)
         fillColumnNAs(surface, ['totalWin','totalLost'])
         surface['surf_matches'] = surface['totalWin'] + surface['totalLost']
         surface['surf_winpct'] = surface['totalWin']/surface['surf_matches']
@@ -135,7 +131,7 @@ def calculate_surface_winpct(df):
         return surface[['Player', 'Surface', 'surf_matches', 'surf_winpct']]
 
 def run_trimdata(args):
-    """Orchestrates the generating of features from commandline arguments."""
+    """Orchestrates the trim data functionalities from commandline arguments."""
     with open(args.config, "r") as f:
         config = yaml.load(f, Loader=yaml.BaseLoader)
     
@@ -146,7 +142,7 @@ def run_trimdata(args):
     return df_trim
 
 def run_rankingstable(args):
-    """Orchestrates the generating of features from commandline arguments."""
+    """Orchestrates the generation of rankings table from commandline arguments."""
     with open(args.config, "r") as f:
         config = yaml.load(f, Loader=yaml.BaseLoader)
     
@@ -157,7 +153,7 @@ def run_rankingstable(args):
     return srank
 
 def run_h2h_record(args):
-    """Orchestrates the generating of features from commandline arguments."""
+    """Orchestrates the generating of h2h records table from commandline arguments."""
     with open(args.config, "r") as f:
         config = yaml.load(f, Loader=yaml.BaseLoader)
     
@@ -168,7 +164,7 @@ def run_h2h_record(args):
     return h2h_record 
 
 def run_surface_record(args):
-    """Orchestrates the generating of features from commandline arguments."""
+    """Orchestrates the generating of surface win records table from commandline arguments."""
     with open(args.config, "r") as f:
         config = yaml.load(f, Loader=yaml.BaseLoader)
     

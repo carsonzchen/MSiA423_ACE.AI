@@ -24,7 +24,7 @@ def read_raw(rawfilepath, filename, **kwargs):
         logger.info("Load file from %s", path)
         return rawfile
     except:
-        logger.error("Error: Unable to load file %s", filename)
+        raise logger.error("Error: Unable to load file %s", filename)
 
 def save_dataset(df, rawfilepath, filename):
     """

@@ -14,8 +14,8 @@ app.config.from_pyfile('../config/flask_config.py')
 
 # Define LOGGING_CONFIG in flask_config.py - path to config file for setting
 # up the logger (e.g. config/logging/local.conf)
-#logging.config.fileConfig(app.config["LOGGING_CONFIG"])
-logger = logging.getLogger("penny-lane")
+logging.config.fileConfig(app.config["LOGGING_CONFIG"])
+logger = logging.getLogger("aceai")
 logger.debug('Test log')
 # Initialize the database
 #db = SQLAlchemy(app)
@@ -23,18 +23,17 @@ logger.debug('Test log')
 
 @app.route('/')
 def index():
-    """Main view that lists songs in the database.
+    """Main view that list players and predictions
 
-    Create view into index page that uses data queried from Track database and
-    inserts it into the msiapp/templates/index.html template.
+    Create view into index page that uses data queried from databases and
+    display it into the msiapp/templates/index.html template.
 
     Returns: rendered html template
 
     """
 
     try:
-        #tracks = db.session.query(Tracks).limit(app.config["MAX_ROWS_SHOW"]).all()
-        logger.debug("Index page accessed")
+        logger.info("Index page accessed")
         return render_template('index.html')
     except:
         traceback.print_exc()
@@ -43,20 +42,21 @@ def index():
 
 @app.route('/about')
 def about():
-    logger.debug("About page accessed")
+    """View that process a click on the about page
+
+    Returns: redirect to about page
+    """
+    logger.info("About page accessed")
     return render_template('about.html')
 
 @app.route('/add', methods=['POST', 'GET'])
 def add_entry():
-    """View that process a POST with new song input
+    """View that process a POST and GET with new player and court input
 
     :return: redirect to index page
     """
-    #player1 = request.form['player1_name']
-    #player2 = request.form['player2_name']
 
     try:
-        #track1 = Tracks(artist=request.form['artist'], album=request.form['album'], title=request.form['title'])
         player1 = request.form['player1_name']
         player2 = request.form['player2_name']
         surface = request.form['surface']
@@ -70,11 +70,7 @@ def add_entry():
         p2rank = int(df['Rank_P2'][0])
         winpctp1 = pctDisplay(df['winpct_surface_P1'][0])
         winpctp2 = pctDisplay(df['winpct_surface_P2'][0])
-        #db.session.add(track1)
-        #db.session.commit()
-        #logger.info("New song added: %s by %s", request.form['title'], request.form['artist'])
-        #result = "Hooray, {} will play {} on {} now! {} has an expected {} chance to win".format(player1, player2, surface, player1, p1win)
-        #return redirect(url_for('index'))
+
         return render_template('index.html', p1 = player1, p2 = player2, surf = surface, result=result, 
             p1h2h = p1h2h, p2h2h = p2h2h, p1rank = p1rank, p2rank = p2rank, winpctp1 = winpctp1, winpctp2 = winpctp2)
     except:
@@ -82,6 +78,10 @@ def add_entry():
         return render_template('error.html')
 
 def pctDisplay(floatinput):
+    """Display a float input as a percentage value with 2 decimal points and % sign
+    Param: (float) float value to be formatted
+    Returns: (str) percentage value with the correct format
+    """
     return str(round(floatinput*100, 2)) + '%'
 
 if __name__ == "__main__":

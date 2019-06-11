@@ -7,12 +7,13 @@ To understand different arguments, run `python run.py --help`
 """
 import argparse
 import logging.config
+from config.flask_config import LOGGING_CONFIG
 #from app.app import app
 
 # Define LOGGING_CONFIG in config.py - path to config file for setting up the logger (e.g. config/logging/local.conf)
-#logging.config.fileConfig(app.config["LOGGING_CONFIG"])
-#logger = logging.getLogger("run-penny-lane")
-#logger.debug('Test log')
+logging.config.fileConfig(LOGGING_CONFIG)
+logger = logging.getLogger("run-aceai")
+logger.debug('Test log')
 
 from src.download_upload_data import run_download_source, upload_data
 from src.preprocess import run_trimdata, run_rankingstable, run_h2h_record, run_surface_record
@@ -66,6 +67,8 @@ if __name__ == '__main__':
 
     sb_model = subparsers.add_parser("train_model", description="Load data into a dataframe")
     sb_model.add_argument('--config', help='path to yaml file with configurations')
+    sb_model.add_argument('--savedatapath', default='data/sample', help='path to save train and test features and labels')
+    sb_model.add_argument('--savemodelpath', default='models/xgboost', help='path to save model pickle file')
     sb_model.set_defaults(func=train_model)
 
     args = parser.parse_args()

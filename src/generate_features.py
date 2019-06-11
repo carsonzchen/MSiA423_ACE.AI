@@ -4,13 +4,11 @@ import random
 import argparse
 import yaml
 
-import logging
-import logging.config
 from src.helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
 from src.preprocess import trim_columns, select_columns
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename='pipeline_log.log', level=logging.DEBUG)
-logger = logging.getLogger('generate features')
+import logging
+logger = logging.getLogger(__name__)
 
 def fewGamesCorrection(df, columns_to_correct, criterion_column = 'totalPlayed', threshold = 2.0, replace_value = 0.5):
     """
@@ -131,7 +129,7 @@ def flip_records(df, seednumber):
                                    'surf_matches_x': 'mp_surface_P2', 'surf_matches_y': 'mp_surface_P1',
                                    'surf_winpct_x': 'winpct_surface_P2', 'surf_winpct_y': 'winpct_surface_P1'},  
                             inplace=True)                    
-    atp_loser_half['h2h_win_pct'] = 1 - atp_loser_half['h2h_win_pct'] # Need to take win% complement
+    atp_loser_half['h2h_win_pct'] = 1 - atp_loser_half['h2h_win_pct'] # Loser needs to take win% complement
 
     atp_matches_twice = pd.concat([atp_winner_half, atp_loser_half], sort=True)
     atp_matches_twice.sort_values(by = ['index'])

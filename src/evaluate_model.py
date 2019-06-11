@@ -1,4 +1,3 @@
-from score_model_db import load_model
 from train_model import split_train_test, choose_features
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
@@ -8,6 +7,24 @@ from helpers.helpers import read_raw, setFeatureType
 import pandas as pd
 import numpy as np
 import yaml
+import pickle
+import logging
+
+logger = logging.getLogger(__name__)
+
+def load_model(modelpath = '../models/xgboost', modelfilename = 'xgb_model.pkl'):
+    """
+    Load pre-saved pickle model from a pkl file
+    
+    :param rawfilepath (str): relative path of the target file
+    :param filename (str): name of the pickle file to load
+
+    :return: a model file can be used for predictions
+    """
+    path = modelpath + '//' + modelfilename
+    pickle_in = open(path, 'rb')
+    model = pickle.load(pickle_in)
+    return model
 
 new_model = load_model()
 train_features = np.loadtxt('../data/sample/train_features.csv', delimiter=',', usecols=range(8))

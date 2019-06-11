@@ -3,13 +3,10 @@ import requests
 import yaml
 import argparse
 import os
+
 import logging
-import logging.config
+logger = logging.getLogger(__name__)
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename='pipeline_log.log', level=logging.DEBUG)
-logger = logging.getLogger('upload_data')
-
-## download file from external data source
 def download_data(sourceurl, rawfilepath, filename):
     """
     Downloads raw data from source public bucket (defined in config) to the local current folder
@@ -28,7 +25,6 @@ def download_data(sourceurl, rawfilepath, filename):
     except requests.exceptions.RequestException:
         logger.error("Error: Unable to download file %s", filename)
 
-## upload file to s3 project bucket
 def upload_data(args):
     """
     Upload raw data downloaded  in the local current folder to a bucket of user input, erases local file
@@ -45,7 +41,7 @@ def upload_data(args):
         logger.error("Error: Upload unsuccessful")
 
 def run_download_source(args):
-    """Orchestrates the generating of features from commandline arguments."""
+    """Orchestrates the downloading of source data from commandline arguments."""
     with open(args.config, "r") as f:
         config = yaml.load(f, Loader=yaml.SafeLoader)
     download_data(**config["run_download_source"]['download_data'])

@@ -74,7 +74,7 @@ train_model:
     test_size: 0.25
     random_state: 42
   fit_xgboost:
-    save_path: 'models/xgboost/xgb_model.pkl'
+    save_path: 'models/xgboost'
     n_estimators: 150
     learning_rate: 0.1
     max_depth: 3

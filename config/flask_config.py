@@ -1,9 +1,9 @@
-#from os import path
+from os import path
 import os
 import sys
 
 # Getting the parent directory of this file. That will function as the project home.
-# PROJECT_HOME = path.dirname(path.dirname(path.abspath(__file__)))
+PROJECT_HOME = path.dirname(path.dirname(path.abspath(__file__)))
 
 # App config
 APP_NAME = "ACE.AI"
@@ -11,7 +11,8 @@ DEBUG = True
 
 # Logging
 # Logging
-# LOGGING_CONFIG = path.join(PROJECT_HOME, 'config/logging/logging.conf')
+#LOGGING_CONFIG = "config/logging/local.conf"
+LOGGING_CONFIG = path.join(PROJECT_HOME, 'config/logging/local.conf')
 # LOGGING_CONFIG = path.join(PROJECT_HOME, 'config/logging/logging.conf')
 
 # Local Database connection config

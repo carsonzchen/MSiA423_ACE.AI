@@ -1,22 +1,17 @@
 import pandas as pd
 import numpy as np
 import random
-
 import argparse
 import yaml
-
-import logging
-import logging.config
-from src.helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
-#from helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
-
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename='pipeline_log.log', level=logging.DEBUG)
-logger = logging.getLogger('train model')
 
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
 from xgboost import XGBClassifier 
 import pickle
+from src.helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
+
+import logging
+logger = logging.getLogger(__name__)
 
 def choose_features(df, features_to_use=None, target=None):
     """Reduces the dataset to the features_to_use. Will keep the target (label) if provided.
@@ -86,7 +81,7 @@ def split_train_test(df, label, test_size = 0.25, random_state = 42, **kwargs):
         train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size = test_size, random_state = random_state)
         return [train_features, test_features, train_labels, test_labels]
 
-def fit_xgboost(train_features, train_labels, save_path = 'models/xgb_model.pkl', **kwargs):
+def fit_xgboost(train_features, train_labels, save_path = 'models/xgboost', **kwargs):
     """
     Fit the dataset using a xgboost model, with options to save the model as a pickle file. Use outputs
     from split_train_test
@@ -103,12 +98,13 @@ def fit_xgboost(train_features, train_labels, save_path = 'models/xgb_model.pkl'
     # Best result: tree: 150 alpha: 0.1 depth: 3
     xgbmodel = xgb.XGBClassifier(objective ='binary:logistic', **kwargs).fit(train_features, train_labels)
     if save_path is not None:
-        with open(save_path, "wb") as f:
+        save_string = save_path + "//" + "xgb_model.pkl"
+        with open(save_string, "wb") as f:
             pickle.dump(xgbmodel, f)
     return xgbmodel
 
 def train_model(args):
-    """Orchestrates the generating of features from commandline arguments."""
+    """Orchestrates the training of model from commandline arguments."""
     with open(args.config, "r") as f:
         config = yaml.load(f, Loader=yaml.SafeLoader)
     
@@ -120,14 +116,10 @@ def train_model(args):
     test_features = data[1]
     train_labels = data[2]
     test_labels = data[3]
-    np.savetxt("data/sample/train_features.csv", train_features, fmt='%5s', delimiter=",")
-    np.savetxt("data/sample/test_features.csv", test_features, fmt='%5s', delimiter=",")
-    np.savetxt("data/sample/train_labels.csv", train_labels, fmt='%s', delimiter=",")
-    np.savetxt("data/sample/test_labels.csv", test_labels, fmt='%s', delimiter=",")
-    print('Training Features Shape:', train_features.shape)
-    print('Training Labels Shape:', train_labels.shape)
-    print('Testing Features Shape:', test_features.shape)
-    print('Testing Labels Shape:', test_labels.shape)
+    np.savetxt(args.savedatapath + "//train_features.csv", train_features, fmt='%5s', delimiter=",")
+    np.savetxt(args.savedatapath + "//test_features.csv", test_features, fmt='%5s', delimiter=",")
+    np.savetxt(args.savedatapath + "//train_labels.csv", train_labels, fmt='%s', delimiter=",")
+    np.savetxt(args.savedatapath + "//test_labels.csv", test_labels, fmt='%s', delimiter=",")
     newmodel = fit_xgboost(train_features, train_labels, **config['train_model']['fit_xgboost'])
     f.close()
     return newmodel

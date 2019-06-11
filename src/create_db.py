@@ -1,7 +1,7 @@
 import os
 import sys
-import logging
-import logging.config
+import argparse
+import yaml
 
 from sqlalchemy import create_engine, Column, Integer, String, Text
 from sqlalchemy.orm import sessionmaker
@@ -11,14 +11,9 @@ import sqlalchemy as sql
 from src.helpers.helpers import create_connection, get_session
 from src.helpers.helpers import read_raw, setFeatureType
 import config.flask_config as conf
-import argparse
-import yaml
 
-#logging.config.fileConfig(config.LOGGING_CONFIG)
-#logger = logging.getLogger('ace-models')
-# set up looging config
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
-logger = logging.getLogger(__file__)
+import logging
+logger = logging.getLogger(__name__)
 
 Base = declarative_base()
 
@@ -65,14 +60,14 @@ class surfacewinpct_db(Base):
         return h2h_repr % (self.player, self.surface, self.surf_matches, self.surf_winpct)
 
 def df_to_db(args):
-    """Orchestrates the generating of features from commandline arguments."""
+    """Orchestrates the writing of csv files to database from commandline arguments."""
     with open(args.config, "r") as f:
         config = yaml.load(f, Loader=yaml.BaseLoader)
 
-    if args.rds == 'True':
+    if args.rds == 'True': # Setting up the database in RDS
         engine_string = conf.rds_engine_string
 
-    else:
+    else: # Setting up the database in local using sqlite
         engine_string = conf.local_engine_string
     
     if args.option in ['Ranking', 'H2H', 'SurfaceWinPct']:

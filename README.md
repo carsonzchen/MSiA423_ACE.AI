@@ -8,9 +8,9 @@
 
 **0. Set up environment**
 
-a) The environment.yml file contains the packages required to run the model code. You need to use conda to setup the virtual environment. The default environment name is ace. You may replace it with another environment name of your choice.
+a) The environment_windows.yml or environment_linux.yml file contains the packages required to run the model code, depending on if you are running it on a windows or linux machine. You need to use conda to setup the virtual environment. The default environment name is ace. You may replace it with another environment name of your choice.
 
-###### conda env create --name ace -f environment.yml
+###### conda env create --name ace -f environment_xxx.yml
 ###### conda activate ace
 
 b) AWS RDS configuration
@@ -34,9 +34,6 @@ Also, update 'src/config' file to configure your RDS
 
 ###### python src/create_db_rds.py
 
-**3. Review deck 'Midterm Review Deck.pptx' is in folder '/deliverables'**
-
-
 ## Project Directory
 <!-- toc -->
 
@@ -55,7 +52,7 @@ Also, update 'src/config' file to configure your RDS
 
 **Success criteria**:
 
-* Model performance: 75% cross-validated classification accuracy on the training data (Current: 65%)
+* Model performance: 75% cross-validated classification accuracy on the training data (Met)
 * Business metrics: 30% users enter more than 1 pair of players, 10% recurrent users in a month
 
 **Data source**:
@@ -79,11 +76,11 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 
 * 2. Model building and validation
 * Backlog stories
-- a) Engineer feature set as predictor variables (4 points, ongoing)
+- a) Engineer feature set as predictor variables (4 points)
 - b) Split data into training and validation sets (0 point)
 - c) Build an initial benchmark model for reference (1 point)
-- d) Iteratively develop a set of models with engineered features, optimize parameters to find the best model (8 points, planned)
-- e) Validate the model using primary and potential alternative metrics such as F1-score (1 point, planned)
+- d) Iteratively develop a set of models with engineered features, optimize parameters to find the best model (8 points)
+- e) Validate the model using primary and potential alternative metrics such as F1-score (1 point)
 
 * 3. Product development
 * Backlog stories
@@ -98,14 +95,16 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 - b) Optimize product before roll-out (4 points)
 - c) Final shipment of the product beta (2 points)
 
+* Realized icebox stories
+- a) Include additional functionalities such as a short summary paragraph and additional statistics with the prediction
+- b) Display of important predictor variables that is associated with the prediction
+- c) Develop a more interactive and image-loaded user-interface for guidance
+
 **Icebox**
 * epic
 - Deploy model with Flask
 
 * stories
-- a) Include additional functionalities such as a short summary paragraph and additional statistics with the prediction
-- b) Display of important predictor variables that is associated with the prediction
-- c) Develop a more interactive and image-loaded user-interface for guidance
 - d) Display upcoming matches according to the ATP World Tour schedule
 
 ## Repo structure 
@@ -116,18 +115,20 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 ├── app
 │   ├── static/                       <- CSS, JS files that remain static 
 │   ├── templates/                    <- HTML (or other code) that is templated and changes based on a set of inputs
-│   ├── models.py                     <- Creates the data model for the database connected to the Flask app 
+│   ├── score_model_db.py             <- Script for scoring new predictions using a trained model
+│   ├── app.py                        <- Script for running the flask app
 │   ├── __init__.py                   <- Initializes the Flask app and database connection
 │
 ├── config                            <- Directory for yaml configuration files for model training, scoring, etc
 │   ├── logging/                      <- Configuration files for python loggers
+│   ├── config.yml                    <- Configuration files for reproduceable and modularized data pipeline settings and parameters
+│   ├── flask_config.py               <- Configuration files for the app and databases
 │
-├── data                              <- Folder that contains data used or generated. Only the external/ and sample/ subdirectories are tracked by git. 
-│   ├── archive/                      <- Place to put archive data is no longer usabled. Not synced with git. 
-│   ├── external/                     <- External data sources, will be synced with git
+├── data                              <- Folder that contains data used or generated. Only the sample/ subdirectories are tracked by git. 
+│   ├── db/                           <- Place to put local sqlite database 
+│   ├── processed/                    <- Place to put processed intermediate data tables 
+│   ├── raw/                          <- Place to put raw data downloaded from websites
 │   ├── sample/                       <- Sample data used for code development and testing, will be synced with git
-│
-├── docs                              <- A default Sphinx project; see sphinx-doc.org for details.
 │
 ├── figures                           <- Generated graphics and figures to be used in reporting.
 │
@@ -144,25 +145,18 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 │   ├── archive/                      <- No longer current scripts.
 │   ├── helpers/                      <- Helper scripts used in main src files 
 │   ├── sql/                          <- SQL source code
-│   ├── add_songs.py                  <- Script for creating a (temporary) MySQL database and adding songs to it 
-│   ├── ingest_data.py                <- Script for ingesting data from different sources 
+│   ├── create_db.py                  <- Script for creating a sqlite (or rds) database and add tables to it 
+│   ├── download_upload_data.py       <- Script for ingesting data from different sources and upload them to S3 to store
 │   ├── generate_features.py          <- Script for cleaning and transforming data and generating features used for use in training and scoring.
+│   ├── evaluate_model.py             <- Script for evaluating the performance of trained model
 │   ├── train_model.py                <- Script for training machine learning model(s)
-│   ├── score_model.py                <- Script for scoring new predictions using a trained model.
-│   ├── postprocess.py                <- Script for postprocessing predictions and model results
-│   ├── evaluate_model.py             <- Script for evaluating model performance 
+│   ├── preprocess.py                 <- Script for preprocessing raw data
 │
 ├── test                              <- Files necessary for running model tests (see documentation below) 
 
+├── makefile                          <- Simplifies the execution of run.py file in bash script
 ├── run.py                            <- Simplifies the execution of one or more of the src scripts 
-├── app.py                            <- Flask wrapper for running the model 
 ├── config.py                         <- Configuration file for Flask app
-├── requirements.txt                  <- Python package dependencies 
+├── environment_linux.yml             <- Python package dependencies for linux system
+├── environment_windows.yml           <- Python package dependencies for windows system
 ```
-This project structure was partially influenced by the [Cookiecutter Data Science project](https://drivendata.github.io/cookiecutter-data-science/).
-
-## Documentation
- 
-* Open up `docs/build/html/index.html` to see Sphinx documentation docs. 
-* See `docs/README.md` for keeping docs up to date with additions to the repository.
-

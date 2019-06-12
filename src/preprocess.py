@@ -17,7 +17,8 @@ def trim_columns(df, columnlist):
     :return: a pandas dataframe with selected columns trimmed
     """
     for column in columnlist:
-        df[column] = df[column].str.strip()
+        if df[column].dtypes == 'O':
+            df[column] = df[column].str.strip()
     return df
 
 def select_columns(df, columnlist):
@@ -35,7 +36,7 @@ def select_columns(df, columnlist):
         logger.info(df_part.head(2))
         return df_part
     else:
-        logger.error("Error: columns not entirely found in the dataset")
+        raise ValueError("Error: columns not entirely found in the dataset")
 
 def gen_rankings_static(df):
     """
@@ -49,6 +50,7 @@ def gen_rankings_static(df):
     df_columns_needed = ['Winner', 'Loser', 'Date', 'WRank', 'LRank']
     if set(df_columns_needed).issubset(set(df.columns)) == False:
         logger.error("%s not in main dataset", str(df_columns_needed))
+        raise ValueError("Required columns not present")
     
     else:
         # Last available rank when players are match winners
@@ -66,7 +68,7 @@ def gen_rankings_static(df):
         allranks["date_rank"] = allranks.groupby("Player")["index"].rank(ascending=0,method='first')
         # Preserve the rank of the latest date
         ranktable = allranks[allranks["date_rank"] == 1][['Player', 'Rank']]
-        return ranktable
+        return ranktable.reset_index(drop = True)
 
 def calculate_h2h(df):
     """
@@ -97,6 +99,7 @@ def calculate_h2h(df):
         return merged
     else:
         logger.error("Error: required columns not entirely found in the dataset")
+        raise ValueError("Required columns not present")
 
 def calculate_surface_winpct(df):
     """
@@ -112,7 +115,7 @@ def calculate_surface_winpct(df):
     columns_needed = ['Winner', 'Loser', 'Surface']
     if set(columns_needed).issubset(set(df.columns)) == False:
         logger.error("%s not in dataset", str(columns_needed))
-        return None
+        raise ValueError("Required columns not present")
     else:
         df = df[columns_needed].assign(index = 1)
         surf_win = df.groupby(['Winner', 'Surface']).aggregate('count')\

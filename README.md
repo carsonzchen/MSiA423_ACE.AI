@@ -4,7 +4,7 @@
 
 **QA: Shreyas Sabnis**
 
-## Midproject PR update and instructions
+## Final Deployment Instructions
 
 **0. Set up environment**
 
@@ -42,20 +42,20 @@ Replace local engine string to rds engine string
 
 **2. Build the data pipeline, model, and the app from scratch**
 
-**0. Optional script if you need to clean all existing data in data folder**
+**2.0. (Optional) Script if you need to clean all existing data in data folder**
 ##### make clean
 
-**1. Script that make the entire data pipeline from downloading data to creating the model needed**
+**2.1. Script that make the entire data pipeline from downloading data to creating the model needed**
 ##### make all_pipeline
 
-**2. Script that runs unit-tests for all user defined functions**
+**2.2. Script that runs unit-tests for all user defined functions**
 ##### make test
 
-**3. Script that runs the app after constructing all pipeline of data and prediction models**
+**2.3. Script that runs the app after constructing all pipeline of data and prediction models**
 ##### make app
 * Default browser ip path for accessing the app on local server is 127.0.0.1:PORT
 
-**4. Optional script that upload raw and intermediate data files my default S3 bucket if you have it configured**
+**2.4. (Optional) Script that upload raw and intermediate data files my default S3 bucket if you have it configured**
 ##### make upload
 
 **If you need to specify what files or what bucket you are using for the upload**

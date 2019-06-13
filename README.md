@@ -13,26 +13,54 @@ a) The environment_windows.yml or environment_linux.yml file contains the packag
 ###### conda env create --name ace -f environment_xxx.yml
 ###### conda activate ace
 
-b) AWS RDS configuration
+**1. Set up configurations**
+
+b) Local sqlite database configuration
+
+Make sure that 'config/flask_config' file has default setting:
+
+* local_engine_string = 'sqlite:///data/db/playerstats.db'
+* HOST = "127.0.0.1"
+* PORT = "Your Port Number to Use"
+* ENGINE_STRING = local_engine_string
+
+c) AWS RDS configuration (An alternative to local database if you are running on AWS server)
 
 Update 'config/.mysqlconfig' to configure update environment variables MYSQL_USER and MYSQL_PASSWORD for your RDS instance, then from the main folder, add the above environments to your bash profile (linux) by running:
 
 ###### echo '/config/.mysqlconfig' >> ~/.bashrc
 ###### source ~/.bashrc
 
-Also, update 'src/config' file to configure your RDS
+Also, update 'config/flask_config' file to configure your RDS
+* USER_NAME -> MySQL username
+* PASSWORD -> MySQL password
 * RDS_HOST -> The endpoint of your RDS instance
 * RDS_PORT -> The port number associated with your RDS instance
 
-**1. Script that acquires data from data source and puts it into S3**
-* Run 'src/upload_data.py', provide your own bucket name, in the main path. Raw data will save as 's3://<your_bucket_name>/data/atp_data.csv'.
+Replace local engine string to rds engine string
+* ENGINE_STRING = rds_engine_string
 
-###### python src/upload_data.py --bucket <your_bucket_name>
+**2. Build the data pipeline, model, and the app from scratch**
 
-**2. Script that creates prediction database schema in RDS**
-* Run 'src/create_db_rds.py'
+**0. Optional script if you need to clean all existing data in data folder**
+##### make clean
 
-###### python src/create_db_rds.py
+**1. Script that make the entire data pipeline from downloading data to creating the model needed**
+##### make all_pipeline
+
+**2. Script that runs unit-tests for all user defined functions**
+##### make test
+
+**3. Script that runs the app after constructing all pipeline of data and prediction models**
+##### make app
+* Default browser ip path for accessing the app on local server is 127.0.0.1:PORT
+
+**4. Optional script that upload raw and intermediate data files my default S3 bucket if you have it configured**
+##### make upload
+
+**If you need to specify what files or what bucket you are using for the upload**
+### python run.py upload_data --localfolder=<folder_subpath> --filename=<file_name> --bucket=<your_bucket_name>
+* The data will save as 's3://<your_bucket_name>/data/<file_name>'.
 
 ## Project Directory
 <!-- toc -->
@@ -52,7 +80,7 @@ Also, update 'src/config' file to configure your RDS
 
 **Success criteria**:
 
-* Model performance: 75% cross-validated classification accuracy on the training data (Met)
+* Model performance: 75% cross-validated classification accuracy on the training data (Achieved)
 * Business metrics: 30% users enter more than 1 pair of players, 10% recurrent users in a month
 
 **Data source**:
@@ -115,7 +143,6 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 ├── app
 │   ├── static/                       <- CSS, JS files that remain static 
 │   ├── templates/                    <- HTML (or other code) that is templated and changes based on a set of inputs
-│   ├── score_model_db.py             <- Script for scoring new predictions using a trained model
 │   ├── app.py                        <- Script for running the flask app
 │   ├── __init__.py                   <- Initializes the Flask app and database connection
 │
@@ -150,6 +177,7 @@ Help tennis enthusiasts, gamers, and column writers to discover possible directi
 │   ├── generate_features.py          <- Script for cleaning and transforming data and generating features used for use in training and scoring.
 │   ├── evaluate_model.py             <- Script for evaluating the performance of trained model
 │   ├── train_model.py                <- Script for training machine learning model(s)
+│   ├── score_model_db.py             <- Script for scoring new predictions using a trained model
 │   ├── preprocess.py                 <- Script for preprocessing raw data
 │
 ├── test                              <- Files necessary for running model tests (see documentation below) 

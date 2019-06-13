@@ -53,14 +53,14 @@ Replace local engine string to rds engine string
 
 **2.3. Script that runs the app after constructing all pipeline of data and prediction models**
 ##### make app
-* Default browser ip path for accessing the app on local server is 127.0.0.1:PORT
+*Default browser ip path for accessing the app on local server is 127.0.0.1:PORT
 
 **2.4. (Optional) Script that upload raw and intermediate data files my default S3 bucket if you have it configured**
 ##### make upload
 
 **If you need to specify what files or what bucket you are using for the upload**
-### python run.py upload_data --localfolder=<folder_subpath> --filename=<file_name> --bucket=<your_bucket_name>
-* The data will save as 's3://<your_bucket_name>/data/<file_name>'.
+##### python run.py upload_data --localfolder=<folder_subpath> --filename=<file_name> --bucket=<your_bucket_name>
+*The data will save as 's3://<your_bucket_name>/data/<file_name>'.
 
 ## Project Directory
 <!-- toc -->

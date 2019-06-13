@@ -2,8 +2,7 @@ import traceback
 from flask import render_template, request, redirect, url_for
 import logging.config
 from flask import Flask
-from score_model_db import assemble_data, score_model
-#from flask_sqlalchemy import SQLAlchemy
+from src.score_model_db import assemble_data, score_model
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -17,8 +16,6 @@ app.config.from_pyfile('../config/flask_config.py')
 logging.config.fileConfig(app.config["LOGGING_CONFIG"])
 logger = logging.getLogger("aceai")
 logger.debug('Test log')
-# Initialize the database
-#db = SQLAlchemy(app)
 
 
 @app.route('/')
@@ -61,7 +58,7 @@ def add_entry():
         player2 = request.form['player2_name']
         surface = request.form['surface']
         df = assemble_data(player1, player2, surface, app.config["ENGINE_STRING"])
-        p1win = score_model(df)
+        p1win = score_model(df, modelpath = 'models/xgboost', modelfilename = 'xgb_model.pkl')
         result = pctDisplay(p1win)
 
         p1h2h = int(df['totalPlayed'][0]*df['h2h_win_pct'][0])
@@ -83,6 +80,3 @@ def pctDisplay(floatinput):
     Returns: (str) percentage value with the correct format
     """
     return str(round(floatinput*100, 2)) + '%'
-
-if __name__ == "__main__":
-    app.run(debug=app.config["DEBUG"], port=app.config["PORT"], host=app.config["HOST"])

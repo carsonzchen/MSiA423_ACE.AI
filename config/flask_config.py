@@ -38,5 +38,5 @@ SQLALCHEMY_ECHO = False  # If true, SQL for queries made will be printed
 MAX_ROWS_SHOW = 100
 
 # Final engine string used:
-ENGINE_STRING = 'sqlite:///../data/db/playerstats.db'
+ENGINE_STRING = 'sqlite:///data/db/playerstats.db'
 #ENGINE_STRING = rds_engine_string

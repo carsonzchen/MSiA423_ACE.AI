@@ -8,14 +8,14 @@
 
 **0. Set up environment**
 
-a) The environment_windows.yml or environment_linux.yml file contains the packages required to run the model code, depending on if you are running it on a windows or linux machine. You need to use conda to setup the virtual environment. The default environment name is ace. You may replace it with another environment name of your choice.
+The environment_windows.yml or environment_linux.yml file contains the packages required to run the model code, depending on if you are running it on a windows or linux machine. You need to use conda to setup the virtual environment. The default environment name is ace. You may replace it with another environment name of your choice.
 
 ###### conda env create --name ace -f environment_xxx.yml
 ###### conda activate ace
 
 **1. Set up configurations**
 
-b) Local sqlite database configuration
+a) Local sqlite database configuration
 
 Make sure that 'config/flask_config' file has default setting:
 
@@ -24,7 +24,7 @@ Make sure that 'config/flask_config' file has default setting:
 * PORT = "Your Port Number to Use"
 * ENGINE_STRING = local_engine_string
 
-c) AWS RDS configuration (An alternative to local database if you are running on AWS server)
+b) AWS RDS configuration (An alternative to local database if you are running on AWS server)
 
 Update 'config/.mysqlconfig' to configure update environment variables MYSQL_USER and MYSQL_PASSWORD for your RDS instance, then from the main folder, add the above environments to your bash profile (linux) by running:
 

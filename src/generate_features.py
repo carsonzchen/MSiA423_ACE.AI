@@ -50,8 +50,11 @@ def add_h2h(df, h2htable):
     if set(feature_to_create).issubset(set(df.columns)): # Check if features already exist
         logger.info("features %s already exists", str(feature_to_create))
         return df
-    elif set(columns_needed).issubset(set(df.columns)) == False: # Check if required columns exist
-        logger.error("%s not in dataset", str(columns_needed))
+    elif set(columns_needed).issubset(set(df.columns)) == False: # Check if required columns exist in main df
+        logger.error("%s not in the main dataset", str(columns_needed))
+        return df
+    elif set(columns_needed).issubset(set(h2htable.columns)) == False: # Check if required columns exist in merge in df
+        logger.error("%s not in the to merge dataset", str(columns_needed))
         return df
     else: 
         h2h_adjusted = fewGamesCorrection(h2htable, ['h2h_win_pct'])

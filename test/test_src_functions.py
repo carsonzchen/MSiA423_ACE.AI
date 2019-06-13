@@ -1,4 +1,5 @@
 from src.preprocess import *
+from src.generate_features import *
 
 import pytest
 import pandas as pd
@@ -117,32 +118,149 @@ import pandas as pd
 #         calculate_h2h(dfb)
 #     assert str(excinfo.value) == "Required columns not present" 
 
-def test_calculate_surface_winpct():
-    """ Test if calculate_surface_winpct() returns accurate results """
+# def test_calculate_surface_winpct():
+#     """ Test if calculate_surface_winpct() returns accurate results """
     
-    df_input = {'Winner': ['Nadal R.', 'Federer R.', 'Nadal R.', 'Nadal R.'], 
-    'Loser': ['Federer R.', 'Nadal R.', 'Federer R.', 'Federer R.'],
-    'Surface': ["Clay", "Grass", "Clay", "Grass"],
-    'Score': ["3-0", "3-2", "3-1", "3-0"]
-    }
-    dfg = pd.DataFrame(data=df_input)
-    df_bad = {'Player1': ['Nadal R.', 'Federer R.', 'Nadal R.', 'Nadal R.'], 
-    'Player2': ['Federer R.', 'Nadal R.', 'Federer R.', 'Federer R.'],
-    'Score': ["3-0", "3-2", "3-1", "3-0"]
-    }
-    dfb = pd.DataFrame(data=df_bad)
+#     df_input = {'Winner': ['Nadal R.', 'Federer R.', 'Nadal R.', 'Nadal R.'], 
+#     'Loser': ['Federer R.', 'Nadal R.', 'Federer R.', 'Federer R.'],
+#     'Surface': ["Clay", "Grass", "Clay", "Grass"],
+#     'Score': ["3-0", "3-2", "3-1", "3-0"]
+#     }
+#     dfg = pd.DataFrame(data=df_input)
+#     df_bad = {'Player1': ['Nadal R.', 'Federer R.', 'Nadal R.', 'Nadal R.'], 
+#     'Player2': ['Federer R.', 'Nadal R.', 'Federer R.', 'Federer R.'],
+#     'Score': ["3-0", "3-2", "3-1", "3-0"]
+#     }
+#     dfb = pd.DataFrame(data=df_bad)
 
-    expected = {'Player': ['Federer R.', 'Nadal R.', 'Nadal R.', 'Federer R.'],
-    'Surface': ["Grass", "Clay", "Grass", "Clay"],
-    'surf_matches': [2.0, 2.0, 2.0, 2.0],
-    'surf_winpct': [0.5, 1.0, 0.5, 0.0]
-    }
+#     expected = {'Player': ['Federer R.', 'Nadal R.', 'Nadal R.', 'Federer R.'],
+#     'Surface': ["Grass", "Clay", "Grass", "Clay"],
+#     'surf_matches': [2.0, 2.0, 2.0, 2.0],
+#     'surf_winpct': [0.5, 1.0, 0.5, 0.0]
+#     }
+#     expected_df = pd.DataFrame(data=expected)
+
+#     # Check expected output
+#     assert expected_df.equals(calculate_surface_winpct(dfg))
+
+#     # Check expected bad output error handling
+#     with pytest.raises(Exception) as excinfo:
+#         calculate_surface_winpct(dfb)
+#     assert str(excinfo.value) == "Required columns not present" 
+
+### Tests for functions in generate_features.py ###
+
+# def test_fewGamesCorrection():
+#     """ Test if fewGamesCorrection() returns accurate results """
+    
+#     df_input = {'p1': ['A', 'B', 'C', 'D'], 
+#     'p2': ['B', 'C', 'D', 'E'],
+#     'totalPlayed': [0, 1, 20, 10],
+#     'winPct': [0.0, 1.0, 0.7, 0.4]
+#     }
+#     df = pd.DataFrame(data=df_input)
+
+#     expected = {'p1': ['A', 'B', 'C', 'D'], 
+#     'p2': ['B', 'C', 'D', 'E'],
+#     'totalPlayed': [0.0, 1.0, 20.0, 10.0],
+#     'winPct': [0.5, 0.5, 0.7, 0.4]
+#     }
+#     expected_df = pd.DataFrame(data=expected)
+
+#     # Check expected bad output would return original dataset as desired
+#     assert df.equals(fewGamesCorrection(df, ['winPct'], 'ClayPlayed', 2.0, 0.5))
+
+#     # Check expected output
+#     assert expected_df.equals(fewGamesCorrection(df, ['winPct'], 'totalPlayed', 2.0, 0.5))
+
+# def test_add_h2h():
+#     """ Test if add_h2h() returns accurate results """
+    
+#     df_input = {'Winner': ['Nadal R.', 'Federer R.'],
+#     'Loser': ['Federer R.', 'Nadal R.'],
+#     'Rank': [1, 2]
+#     }
+#     df = pd.DataFrame(data=df_input)
+#     h2h = {'Winner': ['Federer R.', 'Nadal R.', 'Nadal R.'],
+#     'Loser': ['Nadal R.', 'Federer R.', 'Murray A.'], 
+#     'h2h_win': [1.0, 3.0, 4.0],
+#     'h2h_lost': [3.0, 1.0, 2.0],
+#     'totalPlayed': [4.0, 4.0, 6.0],
+#     'h2h_win_pct': [0.25, 0.75, 0.66]
+#     }
+#     df_h2h = pd.DataFrame(data=h2h)
+#     h2h_bad = {'Winner': ['Federer R.', 'Nadal R.', 'Nadal R.'],
+#     'h2h_count': [2, 2, 4]
+#     }
+#     df_h2h_bad = pd.DataFrame(data=h2h_bad)
+
+#     expected = {'Winner': ['Nadal R.', 'Federer R.'], 
+#     'Loser': ['Federer R.', 'Nadal R.'],
+#     'Rank': [1, 2],
+#     'h2h_win': [3.0, 1.0],
+#     'h2h_lost': [1.0, 3.0],
+#     'totalPlayed': [4.0, 4.0],
+#     'h2h_win_pct': [0.75, 0.25]
+#     }
+#     expected_df = pd.DataFrame(data=expected)
+
+#     # Check expected bad input returns orginal df
+#     assert df.equals(add_h2h(df, df_h2h_bad))
+
+#     # Check expected output
+#     assert expected_df.equals(add_h2h(df, df_h2h))
+
+# def test_add_surface_winpct():
+#     """ Test if calculate_surface_winpct() returns accurate results """
+    
+#     df_input = {'Winner': ['Nadal R.', 'Federer R.'], 
+#     'Loser': ['Federer R.', 'Nadal R.'],
+#     'Surface': ["Clay", "Clay"],
+#     }
+#     df = pd.DataFrame(data=df_input)
+#     surf = {'Player': ['Federer R.', 'Nadal R.', 'Nadal R.'],
+#     'Surface': ["Clay", "Clay", "Glass"],
+#     'surf_matches': [20, 30, 15],
+#     'surf_winpct':  [0.8, 0.9, 0.7]
+#     }
+#     df_surf = pd.DataFrame(data=surf)
+#     surf_bad = {'Player': ['Federer R.', 'Nadal R.', 'Nadal R.'],
+#     'surf_matches': [20, 30, 15],
+#     'surf_winpct':  [0.8, 0.9, 0.7]
+#     }
+#     df_surf_bad = pd.DataFrame(data=surf)
+
+#     expected = {'Winner': ['Nadal R.', 'Federer R.'], 
+#     'Loser': ['Federer R.', 'Nadal R.'],
+#     'Surface': ["Clay", "Clay"],
+#     'surf_matches_x': [30, 20],
+#     'surf_winpct_x':  [0.9, 0.8],
+#     'surf_matches_y': [20, 30],
+#     'surf_winpct_y':  [0.8, 0.9]
+#     }
+#     expected_df = pd.DataFrame(data=expected)
+
+#     # Check expected bad input returns orginal df
+#     assert df.equals(add_h2h(df, df_surf_bad))
+
+#     # Check expected output
+#     assert expected_df.equals(add_surface_winpct(df, df_surf))
+
+def test_flip_records():
+    """ Test if flip_records() returns accurate results """
+    
+    df_input = {'Winner': ['Nadal R.'], 'Loser': ['Federer R.'],
+    'WRank': [1], 'LRank':[2], 'Wsets': [3], 'Lsets':[2], 'h2h_win_pct':[0.6],
+    'h2h_win': [10], 'h2h_lost': [5], 'surf_matches_x': [20], 'surf_matches_y': [10],
+    'surf_winpct_x': [0.9], 'surf_winpct_y': [0.7], 'index':[0]}
+    df = pd.DataFrame(data=df_input)
+
+    expected = df_input = {'Player1': ['Federer R.'], 'Player2': ['Nadal R.'],
+    'Rank_P1': [2], 'Rank_P2': [1], 'Sets_P1':[2], 'Sets_P2':[3], 'h2h_win_pct':[0.4],
+    'h2hwin_P1': [5], 'h2hwin_P2': [10], 'index':[0], 'matchresult': ['L'],
+    'mp_surface_P1': [10], 'mp_surface_P2': [20],
+    'winpct_surface_P1': [0.7], 'winpct_surface_P2': [0.9], }
     expected_df = pd.DataFrame(data=expected)
 
     # Check expected output
-    assert expected_df.equals(calculate_surface_winpct(dfg))
-
-    # Check expected bad output error handling
-    with pytest.raises(Exception) as excinfo:
-        calculate_surface_winpct(dfb)
-    assert str(excinfo.value) == "Required columns not present" 
+    assert expected_df.equals(flip_records(df, seednumber=4))

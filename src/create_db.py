@@ -8,7 +8,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy as sql
 
-from src.helpers.helpers import create_connection, get_session
 from src.helpers.helpers import read_raw, setFeatureType
 import config.flask_config as conf
 

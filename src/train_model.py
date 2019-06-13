@@ -6,7 +6,7 @@ import yaml
 
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
-from xgboost import XGBClassifier 
+from xgboost import XGBClassifier
 import pickle
 from src.helpers.helpers import read_raw, save_dataset, fillColumnNAs, setFeatureType
 
@@ -51,7 +51,8 @@ def choose_features(df, features_to_use=None, target=None):
 
 def split_train_test(df, label, test_size = 0.25, random_state = 42, **kwargs):
     """
-    Split dataframe into 4 parts - training features and labels, and test features and labels
+    Split dataframe into 4 parts - training features and labels, and test features and labels. It
+    is a wrapper for sklearn function train_test_split
 
     Args:
         df (:py:class:`pandas.DataFrame`): DataFrame containing the features and target
@@ -84,7 +85,7 @@ def split_train_test(df, label, test_size = 0.25, random_state = 42, **kwargs):
 def fit_xgboost(train_features, train_labels, save_path = 'models/xgboost', **kwargs):
     """
     Fit the dataset using a xgboost model, with options to save the model as a pickle file. Use outputs
-    from split_train_test
+    from split_train_test, and this is a wrapper for XGBClassifier.
 
     Args:
         train_features: (:obj:`numpy array`) array of the training set features

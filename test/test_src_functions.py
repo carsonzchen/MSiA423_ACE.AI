@@ -1,8 +1,11 @@
 from src.preprocess import *
 from src.generate_features import *
+#from src.train_model import *
+from src.helpers.helpers import *
 
 import pytest
 import pandas as pd
+import numpy as np
 
 ### Tests for functions in preprocess.py ###
 # def test_trim_columns():
@@ -246,21 +249,93 @@ import pandas as pd
 #     # Check expected output
 #     assert expected_df.equals(add_surface_winpct(df, df_surf))
 
-def test_flip_records():
-    """ Test if flip_records() returns accurate results """
+# def test_flip_records():
+#     """ Test if flip_records() returns accurate results """
     
-    df_input = {'Winner': ['Nadal R.'], 'Loser': ['Federer R.'],
-    'WRank': [1], 'LRank':[2], 'Wsets': [3], 'Lsets':[2], 'h2h_win_pct':[0.6],
-    'h2h_win': [10], 'h2h_lost': [5], 'surf_matches_x': [20], 'surf_matches_y': [10],
-    'surf_winpct_x': [0.9], 'surf_winpct_y': [0.7], 'index':[0]}
+#     df_input = {'Winner': ['Nadal R.'], 'Loser': ['Federer R.'],
+#     'WRank': [1], 'LRank':[2], 'Wsets': [3], 'Lsets':[2], 'h2h_win_pct':[0.6],
+#     'h2h_win': [10], 'h2h_lost': [5], 'surf_matches_x': [20], 'surf_matches_y': [10],
+#     'surf_winpct_x': [0.9], 'surf_winpct_y': [0.7], 'index':[0]}
+#     df = pd.DataFrame(data=df_input)
+
+#     expected = df_input = {'Player1': ['Federer R.'], 'Player2': ['Nadal R.'],
+#     'Rank_P1': [2], 'Rank_P2': [1], 'Sets_P1':[2], 'Sets_P2':[3], 'h2h_win_pct':[0.4],
+#     'h2hwin_P1': [5], 'h2hwin_P2': [10], 'index':[0], 'matchresult': ['L'],
+#     'mp_surface_P1': [10], 'mp_surface_P2': [20],
+#     'winpct_surface_P1': [0.7], 'winpct_surface_P2': [0.9], }
+#     expected_df = pd.DataFrame(data=expected)
+
+#     # Check expected output
+#     assert expected_df.equals(flip_records(df, seednumber=4))
+
+# def test_choose_features():
+#     """ Test if choose_features() returns accurate results """
+    
+#     df_input = {'player': ['Nadal R.', 'Federer R.', 'Murray A.', 'Wawrinka S.'], 
+#     'court': ["Clay", "Grass", "Hard", "Hard"],
+#     'matchnumber': [1, 2, 3, 4]
+#     }
+#     df = pd.DataFrame(data=df_input)
+
+#     expected = {'player': ['Nadal R.', 'Federer R.', 'Murray A.', 'Wawrinka S.'], 
+#     'court': ["Clay", "Grass", "Hard", "Hard"],
+#     }
+#     expected_df = pd.DataFrame(data=expected)
+
+#     # Check expected output
+#     assert expected_df.equals(choose_features(df, features_to_use=['player'], target='court'))
+
+# def test_split_train_test():
+#     """ Test if choose_features() returns accurate results """
+    
+#     df_input = {'feature': [1, 2, 3, 4], 
+#     'target': [10, 12, 14, 16],
+#     }
+#     df = pd.DataFrame(data=df_input)
+#     result = split_train_test(df, 'target', test_size = 0.25, random_state = 42)
+
+#     # Check expected output has the correct dimensions
+#     assert len(result[0]) == 3
+#     assert len(result[1]) == 1
+#     assert len(result[2]) == 3
+#     assert len(result[3]) == 1
+
+# test_fit_xgboost: This is just a wrapper function for fitting the XGBoost model,
+# there is no way to check this model without involving manual handling of the data
+
+### Tests for functions in helpers.helpers.py ###
+# def test_setFeatureType():
+#     """ Test if setFeatureType convert columns to accurate types """
+    
+#     df_input1 = {'target': [10, 12, 14, 16]}
+#     df_input2 = {'target': ['10', '12', 'k', '16']}
+#     df1 = pd.DataFrame(data=df_input1)
+#     df2 = pd.DataFrame(data=df_input2)
+    
+#     exp_output1 = {'target': ['10', '12', '14', '16']}
+#     exp_output2 = {'target': ['10', '12', 'k', '16']}
+#     ef1 = pd.DataFrame(data=exp_output1)
+#     ef2 = pd.DataFrame(data=exp_output2)
+
+#     # Check expected output
+#     setFeatureType(df1, ['target'], 'str')
+#     assert ef1.equals(df1)
+
+#     # Check expected bad input returns orginal df
+#     setFeatureType(df2, ['target'], 'int') # df2 should not convert
+#     assert ef2.equals(df2)
+
+def test_fillColumnNAs():
+    """ Test if fillColumnNAs replaces missing values with specified values """
+    
+    df_input = {'target1': [10.0, 12.0, 14.0, np.nan],
+    'target2': [1.0, np.nan, 3.0, np.nan]}
     df = pd.DataFrame(data=df_input)
 
-    expected = df_input = {'Player1': ['Federer R.'], 'Player2': ['Nadal R.'],
-    'Rank_P1': [2], 'Rank_P2': [1], 'Sets_P1':[2], 'Sets_P2':[3], 'h2h_win_pct':[0.4],
-    'h2hwin_P1': [5], 'h2hwin_P2': [10], 'index':[0], 'matchresult': ['L'],
-    'mp_surface_P1': [10], 'mp_surface_P2': [20],
-    'winpct_surface_P1': [0.7], 'winpct_surface_P2': [0.9], }
-    expected_df = pd.DataFrame(data=expected)
+    expected_output = {'target1': [10.0, 12.0, 14.0, 0.0],
+    'target2': [1.0, 0.0, 3.0, 0.0]}
+    ef = pd.DataFrame(data=expected_output)
 
     # Check expected output
-    assert expected_df.equals(flip_records(df, seednumber=4))
+    fillColumnNAs(df, df.columns, 0)
+    assert ef.equals(df)
